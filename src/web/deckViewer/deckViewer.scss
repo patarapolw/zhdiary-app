@@ -1,0 +1,82 @@
+@import "~bootstrap/scss/bootstrap.scss";
+@import "~tingle.js/src/tingle";
+@import "~simplemde/dist/simplemde.min";
+@import "~flatpickr/dist/flatpickr";
+
+html, body, #App, .height-100 {
+    height: 100%;
+    overflow: hidden;
+}
+
+.tree-new {
+    color: green;
+}
+
+.tree-leech {
+    color: red;
+}
+
+.tree-due {
+    color: blue;
+}
+
+.animate {
+    transition: all 0.4s linear;
+}
+
+.hidden {
+    display: none;
+}
+
+#DeckArea {
+    height: 100%;
+    overflow: scroll;
+}
+
+#QuizArea {
+    height: 100%;
+    overflow: scroll;
+}
+
+.border-right {
+    border-right: 1px solid black;
+}
+
+pre {
+    white-space: pre-wrap;
+}
+
+.CodeMirror,
+.CodeMirror-scroll,
+.CodeMirror-fullscreen.CodeMirror, 
+.editor-preview-side {
+    max-height: 80% !important;
+    height: 80% !important;
+    overflow: scroll;
+}
+
+.db-editor-md-editor {
+    height: 500px;
+    overflow: scroll;
+}
+
+form {
+    .CodeMirror, .CodeMirror-scroll {
+        min-height: 100px !important;
+        height: 100px !important;
+    }
+}
+  
+.clear {
+    background: rgba(0, 0, 0, 0);
+    border: 0px;
+}
+
+.db-editor-new-entry-editor textarea {
+    height: 150px;
+    overflow: scroll;
+}
+
+img {
+    max-width: 500px;
+}
