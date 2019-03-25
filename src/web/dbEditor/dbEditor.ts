@@ -482,7 +482,12 @@ export class DbEditor {
     private async addEntry(entry: any, isNew = false) {
         let id: string = entry.id;
         if (isNew) {
-            id = (await fetchJSON(this.settings.endpoint, {create: entry}, "PUT")).id;
+            try {
+                id = (await fetchJSON(this.settings.endpoint, {create: entry}, "PUT")).id;
+            } catch (e) {
+                alert("Not created.");
+                return;
+            }
             this.page.count++;
             this.page.to++;
             this.page.total++;
@@ -531,12 +536,17 @@ export class DbEditor {
         isNew ? this.$el.tbody.prepend($tr) : this.$el.tbody.append($tr);
     }
 
-    private async updateServer($target: JQuery, val: any): Promise<JQuery> {
-        await fetchJSON(this.settings.endpoint, {
-            id: $target.closest("tr").data("id"),
-            fieldName: $target.data("name"),
-            fieldData: val
-        }, "PUT");
+    private async updateServer($target: JQuery, val: any): Promise<JQuery | null> {
+        try {
+            await fetchJSON(this.settings.endpoint, {
+                id: $target.closest("tr").data("id"),
+                fieldName: $target.data("name"),
+                fieldData: val
+            }, "PUT");
+        } catch (e) {
+            alert("Not updated.");
+            return null;
+        }
 
         $target.data("data", val);
 

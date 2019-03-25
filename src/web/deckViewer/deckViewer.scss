@@ -8,6 +8,13 @@ html, body, #App, .height-100 {
     overflow: hidden;
 }
 
+.tree-score-child {
+    margin-left: 0.5em;
+    width: 2em;
+    text-align: right;
+    display: inline-block;
+}
+
 .tree-new {
     color: green;
 }
