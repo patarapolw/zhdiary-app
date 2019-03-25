@@ -417,7 +417,11 @@ class EntryEditor {
     private updateEntry(entry: any, $container: JQuery) {
         $(".c-data-front", $container).html(this.settings.convert!(entry.front));
         $(".c-data-back", $container).html(this.settings.convert!(entry.back || ""));
-        fetchJSON(this.settings.endpoint, {update: entry}, "PUT");
+        console.log($container.data("id"));
+        fetchJSON(this.settings.endpoint, {
+            id: $container.data("id"),
+            update: entry
+        }, "PUT");
     }
 }
 

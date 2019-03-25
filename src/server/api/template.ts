@@ -26,7 +26,13 @@ export class TemplateController {
                 simplified: vocab,
                 pinyin: pinyinConverter(vocab)
             }];
-            zhDb.vocab!.insert(v);
+            // zhDb.vocab!.insert(v);
+        } else {
+            const newV = v.filter((el) => {
+                return (el.english ? !/^variant of/i.test(el.english) && !/^surname /i.test(el.english) : true &&
+                el.pinyin[0] === el.pinyin[0].toLocaleLowerCase());
+            });
+            v = newV.length > 0 ? newV : v;
         }
 
         let s: ISentence[] = zhDb.sentence!.find({chinese: {$regex: XRegExp.escape(vocab)}}).slice(0, 10);

@@ -104,6 +104,9 @@ export class MongoSearchQuery {
                             result[el[0]] = {$regex: XRegExp.escape(el[2].toString())};
                         }
                         break;
+                    case "~":
+                        result[el[0]] = {$regex: el[2].toString()};
+                        break;
                     case ">=":
                         result[el[0]] = {$gte: el[2]};
                         break;
@@ -131,11 +134,12 @@ export class MongoSearchQuery {
                 r.RawString,
                 r.QuoteString
             ),
-            RawString: () => P.regexp(/[^" :>=<]+/),
+            RawString: () => P.regexp(/[^" :>=<~]+/),
             QuoteString: (r) => r.Quote.then(r.Value).skip(r.Quote),
             Quote: () => P.string('"'),
             Op: () => P.alt(
                 P.string(":"),
+                P.string("~"),
                 P.string(">="),
                 P.string(">"),
                 P.string("<="),
