@@ -17,7 +17,8 @@ export interface ICard {
     srsLevel?: number;
     nextReview?: Date;
     tag?: string[];
-    vocab: string;
+    vocab?: string;
+    template?: string;
 }
 
 export interface IImage {

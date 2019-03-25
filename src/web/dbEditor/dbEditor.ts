@@ -4,7 +4,6 @@ import SimpleMDE from "simplemde";
 import "bootstrap";
 import flatpickr from "flatpickr";
 import "./dbEditor.scss";
-import mustache from "mustache";
 import { toTitle, fetchJSON } from "../util";
 
 export interface IColumn {
@@ -18,9 +17,6 @@ export interface IColumn {
     separator?: string;
     required?: boolean;
     requiredText?: string;
-    template?: string;
-    templateSource?: any;
-    oninput?: (v: string) => any;
     parse?: (x: string) => any;
     constraint?: (x: any) => boolean;
 }
@@ -29,6 +25,7 @@ export interface IDbEditorSettings {
     el: JQuery | HTMLElement;
     columns: IColumn[];
     endpoint: string;
+    templateApi?: string;
     readOnly?: boolean;
     newEntry?: boolean;
     convert?: (x: string, v?: string) => string;
@@ -177,18 +174,22 @@ export class DbEditor {
 
                 $("input, textarea", this.$el[col.name]).val("");
 
-                if (col.oninput) {
+                if (settings.templateApi && col.name === "template") {
                     $("input, textarea", this.$el[col.name]).on("input", (e) => {
                         const v = (e.target as any).value;
                         if (v) {
-                            col.oninput!(v);
-                            this.current.vocab = v;
-                        }
-
-                        for (const col2 of settings.columns) {
-                            if (col2.type === "markdown") {
-                                setTimeout(() => this.mde[col2.name].codemirror.refresh(), 0);
-                            }
+                            fetchJSON(this.settings.templateApi!, {template: v}).then((t) => {
+                                if (t) {
+                                    for (const col2 of settings.columns) {
+                                        if (t[col2.name]) {
+                                            if (col2.type === "markdown") {
+                                                this.mde[col2.name].value(t[col2.name]);
+                                                setTimeout(() => this.mde[col2.name].codemirror.refresh(), 0);
+                                            }
+                                        }
+                                    }
+                                }
+                            });
                         }
                     });
                 }
@@ -213,7 +214,7 @@ export class DbEditor {
 
                     for (const col of settings.columns) {
                         if (col.type === "markdown") {
-                            this.mde[col.name].value(col.template || "");
+                            this.mde[col.name].value("");
 
                             if (this.mde[col.name].isFullscreenActive()) {
                                 SimpleMDE.toggleFullScreen(this.mde[col.name]);
@@ -264,13 +265,6 @@ export class DbEditor {
                     }
 
                     entry[col.name] = v;
-                }
-
-                for (const col of this.settings.columns) {
-                    if (col.type === "markdown" && col.templateSource) {
-                        entry[col.name] = mustache.render(entry[col.name],
-                            col.templateSource[entry.vocab]);
-                    }
                 }
 
                 this.addEntry(entry, true);
@@ -622,7 +616,7 @@ export class DbEditor {
         $button.prop("disabled", !$el.val());
     }
 
-    private submitTextAreaAndRemove(el: any) {
+    private async submitTextAreaAndRemove(el: any) {
         const $el = $(el);
         const $target = $el.data("$target");
         const $cellWrapper = $target.find(".cell-wrapper");
@@ -630,9 +624,11 @@ export class DbEditor {
         let val = $el.val() as string;
 
         const vocab = $target.closest("tr").data("vocab");
-        if (col.templateSource) {
-            val = mustache.render(val,
-                col.templateSource[vocab]);
+        if (this.settings.templateApi) {
+            const t = await fetchJSON(this.settings.templateApi);
+            if (t) {
+                val = t[col.name] || "";
+            }
         }
 
         if (col.type === "number") {

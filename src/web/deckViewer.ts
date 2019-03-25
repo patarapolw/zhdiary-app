@@ -2,20 +2,18 @@ import "bootstrap";
 import $ from "jquery";
 import "jstree";
 import uuid from "uuid/v4";
-import { shuffle, Md2Html, fetchJSON, toTitle } from "./util";
+import { shuffle, md2html, fetchJSON, toTitle } from "./util";
 import "./deckViewer/deckViewer.scss";
 import "jstree/dist/themes/default/style.min.css";
 import deckViewerHtml from "./deckViewer/deckViewer.html";
 import { IDbEditorSettings, IJqList, IMdeList, IModalList } from "./dbEditor/dbEditor";
 import SimpleMDE from "simplemde";
 import tingle from "tingle.js";
-import mustache from "mustache";
 import flatpickr from "flatpickr";
 
 let uuidToDeck = {} as any;
 let jstree: any = null;
 let q: string = "";
-const md2html = new Md2Html();
 
 async function loadJstree() {
     const deckList = await fetchJSON("/api/deck/filter", {q});
@@ -155,8 +153,8 @@ async function initQuiz(id: string) {
 
             const $parent = $(`
             <div class="c-container">
-                <div class="c-all c-data-front">${md2html.convert(c.front)}</div>
-                <div class="c-back c-data-back">${md2html.convert(c.back || "")}</div>
+                <div class="c-all c-data-front">${md2html(c.front)}</div>
+                <div class="c-back c-data-back">${md2html(c.back || "")}</div>
                 <div class="c-btn-list mt-3 mb-3">
                     <button class="btn btn-primary c-front c-btn-show">Show</button>
                     <button class="btn btn-success c-back c-btn-right">Right</button>
@@ -281,18 +279,22 @@ class EntryEditor {
                 });
             }
 
-            if (col.oninput) {
+            if (settings.templateApi && col.name === "template") {
                 $("input, textarea", this.$el[col.name]).on("input", (e) => {
                     const v = (e.target as any).value;
                     if (v) {
-                        col.oninput!(v);
-                        this.current.vocab = v;
-                    }
-
-                    for (const col2 of settings.columns) {
-                        if (col2.type === "markdown") {
-                            setTimeout(() => this.mde[col2.name].codemirror.refresh(), 0);
-                        }
+                        fetchJSON(this.settings.templateApi!, {template: v}).then((t) => {
+                            if (t) {
+                                for (const col2 of settings.columns) {
+                                    if (t[col2.name]) {
+                                        if (col2.type === "markdown") {
+                                            this.mde[col2.name].value(t[col2.name]);
+                                            setTimeout(() => this.mde[col2.name].codemirror.refresh(), 0);
+                                        }
+                                    }
+                                }
+                            }
+                        });
                     }
                 });
             }
@@ -371,13 +373,6 @@ class EntryEditor {
                 entry[col.name] = v;
             }
 
-            for (const col of this.settings.columns) {
-                if (col.type === "markdown" && col.templateSource) {
-                    entry[col.name] = mustache.render(entry[col.name],
-                        col.templateSource[entry.vocab]);
-                }
-            }
-
             this.updateEntry(entry, this.$el.editEntry.data("$container"));
             this.modal.editEntry.close();
         });
@@ -442,14 +437,15 @@ $(() => {
 const entryEditor = new EntryEditor({
     el: document.getElementById("App")!,
     endpoint: "/api/editor/",
-    convert: (s, v) => md2html.convert(s, v),
+    templateApi: "/api/template/",
+    convert: (s) => md2html(s),
     columns: [
         {name: "deck", width: 200, type: "one-line", required: true},
-        {name: "vocab", width: 150, type: "one-line", required: true, oninput: (v) => md2html.addTemplate(v)},
-        {name: "front", width: 500, type: "markdown", required: true, templateSource: md2html.template},
-        {name: "back", width: 500, type: "markdown", templateSource: md2html.template},
+        {name: "template", width: 150, type: "one-line"},
+        {name: "front", width: 500, type: "markdown", required: true},
+        {name: "back", width: 500, type: "markdown"},
         {name: "tag", width: 150, type: "list", separator: " "},
-        {name: "note", width: 300, type: "markdown", templateSource: md2html.template},
+        {name: "note", width: 300, type: "markdown"},
         {name: "srsLevel", width: 150, type: "number", label: "SRS Level"},
         {name: "nextReview", width: 200, type: "datetime", label: "Next Review"}
     ]

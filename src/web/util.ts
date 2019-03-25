@@ -1,6 +1,4 @@
 import showdown from "showdown";
-import mustache from "mustache";
-import XRegExp from "xregexp";
 
 export function shuffle(a: any[]) {
     for (let i = a.length - 1; i > 0; i--) {
@@ -10,42 +8,18 @@ export function shuffle(a: any[]) {
     return a;
 }
 
-export class Md2Html {
-    public template: any = {};
+const mdConverter = new showdown.Converter({
+    tables: true
+});
 
-    private mdConverter = new showdown.Converter({
-        tables: true
-    });
+mdConverter.setFlavor("github");
 
-    constructor() {
-        this.mdConverter.setFlavor("github");
+export function md2html(s: string): string {
+    if (!s) {
+        return "";
     }
 
-    public convert(s: string, v?: string): string {
-        if (!s) {
-            return "";
-        }
-
-        console.log(this);
-        console.log(this.template);
-
-        s = mustache.render(s, v ? this.template[v] || {} : {});
-
-        return this.mdConverter.makeHtml(s);
-    }
-
-    public async addTemplate(v: string): Promise<any> {
-        if (!XRegExp("\\p{Han}").test(v) || this.template[v]) {
-            return;
-        }
-
-        console.log(this);
-
-        const t = await fetchJSON("/api/template/", {vocab: v});
-        this.template[v] = t;
-
-        return t;
-    }
+    return mdConverter.makeHtml(s);
 }
 
 export function toTitle(s: string) {

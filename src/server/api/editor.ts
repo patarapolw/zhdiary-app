@@ -2,9 +2,7 @@ import { Request, Response, Router } from "express";
 import Config from "../config";
 import UserDb from "../userDb";
 import ZhDb from "../zhdb";
-import XRegExp from "xregexp";
 import moment from "moment";
-import mustache from "mustache";
 
 class EditorController {
     public static find(req: Request, res: Response): Response {
@@ -20,30 +18,13 @@ class EditorController {
         const zhDb = Config.zhDb as ZhDb;
 
         const q = userDb.card!.eqJoin(userDb.deck!, "deckId", "$loki", (l, r) => {
-            const {front, back, note, tag, srsLevel, nextReview, vocab} = l;
+            const {front, back, note, tag, srsLevel, nextReview, template} = l;
             const deck = r.name;
-            return {id: l.$loki, front, back, note, tag, srsLevel, nextReview, vocab, deck};
+            return {id: l.$loki, front, back, note, tag, srsLevel, nextReview, template, deck};
         }).find(cond).compoundsort([["deck", false], ["srsLevel", false]]);
 
         return res.json({
-            data: q.offset(offset).limit(limit).data().map((c) => {
-                const v = zhDb.vocab!.eqJoin(zhDb.token!, "simplified", "entry", (l, r) => {
-                    const {simplified, traditional, pinyin, english} = l;
-                    const {frequency, level} = r;
-                    return {simplified, traditional, pinyin, english, frequency, level};
-                }).find({$or: [
-                    {simplified: c.vocab},
-                    {traditional: c.vocab}
-                ]}).simplesort("frequency", true).data();
-
-                const s = zhDb.sentence!.find({chinese: {$regex: XRegExp.escape(c.vocab)}});
-
-                c.front = mustache.render(c.front || "", {v, s});
-                c.back = mustache.render(c.back || "", {v, s});
-                c.note = mustache.render(c.note || "", {v, s});
-
-                return c;
-            }),
+            data: q.offset(offset).limit(limit).data(),
             total: q.copy().count()
         });
     }
