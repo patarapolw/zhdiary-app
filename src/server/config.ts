@@ -5,7 +5,8 @@ import LokiSearchQuery from "./search-query";
 export const Config = yaml.safeLoad(fs.readFileSync("config.yml", "utf8"));
 
 Config.searchParser = new LokiSearchQuery({
-    any: ["front", "back", "deck"]
+    any: ["front", "back", "deck"],
+    isDate: ["nextReview"]
 });
 
 export default Config;

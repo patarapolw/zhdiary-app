@@ -10,6 +10,7 @@ import { IDbEditorSettings, IJqList, IMdeList, IModalList } from "./dbEditor/dbE
 import SimpleMDE from "simplemde";
 import tingle from "tingle.js";
 import flatpickr from "flatpickr";
+import "./common";
 
 let uuidToDeck = {} as any;
 let jstree: any = null;
@@ -428,8 +429,8 @@ $(() => {
     }
     loadJstree();
 
-    (document.getElementById("search-bar") as HTMLInputElement).addEventListener("keyup", () => {
-        q = (document.getElementById("search-bar") as HTMLInputElement).value;
+    $("#search-bar").on("input", (e) => {
+        q = $(e.target).val() as string;
         loadJstree();
     });
 });

@@ -33,6 +33,10 @@ export function getQuery(userDb?: UserDb, zhDb?: ZhDb) {
             }
         }
 
+        if (!entry) {
+            entry = c.front;
+        }
+
         return entry || "";
     }, (t) => t.entry, (l, r) => {
         delete l.$loki;

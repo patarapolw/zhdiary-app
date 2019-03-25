@@ -18,7 +18,7 @@ class DeckController {
             const due: any[] = req.body.due;
             cond.nextReview = {$and: [
                 {$exists: true},
-                {$lt: moment().add(due[0], due[1]).toDate()}
+                {$lt: moment().add(due[0], due[1]).toISOString()}
             ]};
         }
 
@@ -40,7 +40,7 @@ class DeckController {
             const due: any[] = req.body.due;
             cond.nextReview = {$and: [
                 {$exists: true},
-                {$lt: moment().add(due[0], due[1]).toDate()}
+                {$lt: moment().add(due[0], due[1]).toISOString()}
             ]};
         }
 

@@ -1,5 +1,6 @@
 import P from "parsimmon";
 import XRegExp from "xregexp";
+import moment from "moment";
 
 export interface ILokiSearchQueryRule {
     any?: string[];
@@ -88,46 +89,64 @@ export class LokiSearchQuery {
                 r.Op,
                 r.Value
             ).map((el: any[]) => {
-                const result = {[el[0]]: el[2]};
+// tslint:disable-next-line: prefer-const
+                let [k, op, v] = el;
 
-                if (rule.isDate && rule.isDate.indexOf(el[0]) !== -1) {
-                    result[el[0]] = {$toDate: el[2]};
+                const result = {} as any;
+
+                if (v === "NULL") {
+                    return {$or: [
+                        {[k]: ""},
+                        {[k]: {$exists: false}}
+                    ]};
                 }
 
-                switch (el[1]) {
+                if (rule.isDate && rule.isDate.indexOf(k) !== -1) {
+                    const m = /^([-+]?\d+)(\S+)$/.exec(v.toString());
+
+                    if (m) {
+                        v = moment().add(moment.duration(parseInt(m[1]), m[2] as any)).toISOString();
+                        op = "<=";
+                    } else if (v === "now") {
+                        v = moment().toISOString();
+                        op = "<=";
+                    }
+                }
+
+                switch (op) {
                     case ":":
                         if (rule.isString) {
-                            if (rule.isString.indexOf(el[0]) !== -1) {
-                                result[el[0]] = {$regex: XRegExp.escape(el[2].toString())};
+                            if (rule.isString.indexOf(k) !== -1) {
+                                v = {$regex: XRegExp.escape(v.toString())};
                             }
                         } else {
-                            result[el[0]] = {$regex: XRegExp.escape(el[2].toString())};
+                            v = {$regex: XRegExp.escape(v.toString())};
                         }
                         break;
                     case "~":
-                        result[el[0]] = {$regex: el[2].toString()};
+                        v = {$regex: v.toString()};
                         break;
                     case ">=":
-                        result[el[0]] = {$and: [
-                            {$gte: el[2]},
+                        v = {$and: [
+                            {$gte: v},
                             {$exists: true}
                         ]};
                         break;
                     case ">":
-                        result[el[0]] = {$and: [
-                            {$gt: el[2]},
+                        v = {$and: [
+                            {$gt: v},
                             {$exists: true}
                         ]};
                         break;
                     case "<=":
-                        result[el[0]] = {$and: [
-                            {$lte: el[2]},
+                        v = {$and: [
+                            {$lte: v},
                             {$exists: true}
                         ]};
                         break;
                     case "<":
-                        result[el[0]] = {$and: [
-                            {$lt: el[2]},
+                        v = {$and: [
+                            {$lt: v},
                             {$exists: true}
                         ]};
                         break;
@@ -135,13 +154,15 @@ export class LokiSearchQuery {
                     default:
                 }
 
+                result[k] = v;
+
                 return result;
             }),
             Value: (r) => P.alt(
                 r.Number,
                 r.String
             ),
-            Number: () => P.regexp(/\d+(?:\.\d+)?/).map(Number),
+            Number: () => P.regexp(/^\d+(?:\.\d+)?$/).map(Number),
             String: (r) => P.alt(
                 r.RawString,
                 r.QuoteString

@@ -1,5 +1,6 @@
 import { DbEditor } from "./dbEditor/dbEditor";
 import { md2html } from "./util";
+import "./common";
 
 const editor = new DbEditor({
     el: document.getElementById("App")!,

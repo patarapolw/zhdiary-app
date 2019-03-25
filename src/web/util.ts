@@ -1,4 +1,5 @@
 import showdown from "showdown";
+import XRegExp from "xregexp";
 
 export function shuffle(a: any[]) {
     for (let i = a.length - 1; i > 0; i--) {
@@ -18,6 +19,9 @@ export function md2html(s: string): string {
     if (!s) {
         return "";
     }
+
+    s = XRegExp.replace(s, XRegExp("([\\p{Han}，、“”0-9]*\\p{Han}[\\p{Han}，、“”0-9]*)", "g"),
+    `<span class="zh-speak">$1</span>`);
 
     return mdConverter.makeHtml(s);
 }

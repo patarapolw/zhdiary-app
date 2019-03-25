@@ -1,6 +1,5 @@
 import { Request, Response, Router } from "express";
 import XRegExp from "xregexp";
-import moment from "moment";
 import QuizResource from "../userDb/QuizResource";
 import Config from "../config";
 import UserDb from "../userDb";
@@ -16,13 +15,11 @@ class QuizController {
         if (req.body.deck) {
             cond.deck = {$regex: `${XRegExp.escape(req.body.deck)}(/.+)?`};
         }
-        if (req.body.due) {
-            const due: any[] = req.body.due;
-            cond.nextReview = {$and: [
-                {$exists: true},
-                {$lt: moment().add(due[0], due[1]).toDate()}
-            ]};
-        }
+
+        cond.nextReview = {$and: [
+            {$exists: true},
+            {$lt: new Date().toISOString()}
+        ]};
 
         const cards = getQuery().find(cond).data();
 
