@@ -1,11 +1,11 @@
 import yaml from "js-yaml";
 import fs from "fs";
-import MongoSearchQuery from "./search-query";
+import LokiSearchQuery from "./search-query";
 
 export const Config = yaml.safeLoad(fs.readFileSync("config.yml", "utf8"));
 
-Config.searchParser = new MongoSearchQuery({
-    any: ["front", "back"]
+Config.searchParser = new LokiSearchQuery({
+    any: ["front", "back", "deck"]
 });
 
 export default Config;

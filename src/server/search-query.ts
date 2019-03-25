@@ -1,16 +1,16 @@
 import P from "parsimmon";
 import XRegExp from "xregexp";
 
-export interface IMongoSearchQueryRule {
+export interface ILokiSearchQueryRule {
     any?: string[];
     isString?: string[];
     isDate?: string[];
 }
 
-export class MongoSearchQuery {
+export class LokiSearchQuery {
     private lang: P.Language;
 
-    constructor(rule: IMongoSearchQueryRule = {}) {
+    constructor(rule: ILokiSearchQueryRule = {}) {
         this.lang = P.createLanguage({
             Input: (r) => P.alt(
                 r.OrSentence,
@@ -108,16 +108,28 @@ export class MongoSearchQuery {
                         result[el[0]] = {$regex: el[2].toString()};
                         break;
                     case ">=":
-                        result[el[0]] = {$gte: el[2]};
+                        result[el[0]] = {$and: [
+                            {$gte: el[2]},
+                            {$exists: true}
+                        ]};
                         break;
                     case ">":
-                        result[el[0]] = {$gt: el[2]};
+                        result[el[0]] = {$and: [
+                            {$gt: el[2]},
+                            {$exists: true}
+                        ]};
                         break;
                     case "<=":
-                        result[el[0]] = {$lte: el[2]};
+                        result[el[0]] = {$and: [
+                            {$lte: el[2]},
+                            {$exists: true}
+                        ]};
                         break;
                     case "<":
-                        result[el[0]] = {$lt: el[2]};
+                        result[el[0]] = {$and: [
+                            {$lt: el[2]},
+                            {$exists: true}
+                        ]};
                         break;
                     case "=":
                     default:
@@ -155,4 +167,4 @@ export class MongoSearchQuery {
     }
 }
 
-export default MongoSearchQuery;
+export default LokiSearchQuery;

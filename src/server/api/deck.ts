@@ -1,13 +1,11 @@
 import { Request, Response, Router } from "express";
 import XRegExp from "xregexp";
 import Config from "../config";
-import UserDb from "../userDb";
 import moment from "moment";
+import { getQuery } from "../userDb/SearchResource";
 
 class DeckController {
     public static filter(req: Request, res: Response): Response {
-        const userDb: UserDb = Config.userDb;
-
         let cond: any = {};
         try {
             cond = Config.searchParser.search(req.body.q || "");
@@ -21,18 +19,12 @@ class DeckController {
             cond.nextReview = moment().add(due[0], due[1]).toDate();
         }
 
-        const decks = userDb.card!.eqJoin(userDb.deck!, "deckId", "$loki", (l, r) => {
-            const {front, back, note, tag, srsLevel, nextReview, vocab} = l;
-            const deck = r.name;
-            return {id: l.$loki, front, back, note, tag, srsLevel, nextReview, vocab, deck};
-        }).find(cond).data().map((d) => d.deck);
+        const decks = getQuery().find(cond).data().map((d) => d.deck);
 
         return res.json(decks.filter((d, i) => decks.indexOf(d) === i));
     }
 
     public static stat(req: Request, res: Response): Response {
-        const userDb: UserDb = Config.userDb;
-
         let cond: any = {};
         try {
             cond = Config.searchParser.search(req.body.q || "");
@@ -46,11 +38,7 @@ class DeckController {
             cond.nextReview = moment().add(due[0], due[1]).toDate();
         }
 
-        const cards = userDb.card!.eqJoin(userDb.deck!, "deckId", "$loki", (l, r) => {
-            const {front, back, note, tag, srsLevel, nextReview, vocab} = l;
-            const deck = r.name;
-            return {id: l.$loki, front, back, note, tag, srsLevel, nextReview, vocab, deck};
-        }).find(cond).data();
+        const cards = getQuery().find(cond).data();
 
         const now = new Date();
 

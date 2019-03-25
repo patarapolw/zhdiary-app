@@ -1,8 +1,8 @@
 import { Request, Response, Router } from "express";
 import Config from "../config";
 import UserDb from "../userDb";
-import ZhDb from "../zhdb";
 import moment from "moment";
+import { getQuery } from "../userDb/SearchResource";
 
 class EditorController {
     public static find(req: Request, res: Response): Response {
@@ -14,14 +14,7 @@ class EditorController {
         const offset: number = req.body.offset;
         const limit: number = req.body.limit;
 
-        const userDb = Config.userDb as UserDb;
-        const zhDb = Config.zhDb as ZhDb;
-
-        const q = userDb.card!.eqJoin(userDb.deck!, "deckId", "$loki", (l, r) => {
-            const {front, back, note, tag, srsLevel, nextReview, template} = l;
-            const deck = r.name;
-            return {id: l.$loki, front, back, note, tag, srsLevel, nextReview, template, deck};
-        }).find(cond).compoundsort([["deck", false], ["srsLevel", false]]);
+        const q = getQuery().find(cond).compoundsort([["deck", false], ["srsLevel", false]]);
 
         return res.json({
             data: q.offset(offset).limit(limit).data(),
