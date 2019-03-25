@@ -10,8 +10,8 @@ import LokiSearchQuery from "../server/search-query";
     const parser: LokiSearchQuery = Config.searchParser;
 
     console.log(getQuery(userDb, zhDb).find(parser.search("cLevel<10")).data().map((el) => {
-        const {vocab, level, levels} = el;
-        return {vocab, level, levels};
+        const {vocab, cLevel, cLevels} = el;
+        return {vocab, cLevel, cLevels};
     }));
 
     zhDb.close();

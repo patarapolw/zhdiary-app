@@ -4,31 +4,29 @@ import moment from "moment";
 import QuizResource from "../userDb/QuizResource";
 import Config from "../config";
 import UserDb from "../userDb";
+import { getQuery } from "../userDb/SearchResource";
 
 class QuizController {
     public static build(req: Request, res: Response): Response {
-        const db: UserDb = Config.userDb;
-        const deck: string = req.body.deck;
-        const duePair = req.body.due;
-        const tag: string[] = req.body.tag || [];
+        let cond: any = {};
+        try {
+            cond = Config.searchParser.search(req.body.q || "");
+        } catch (e) {}
 
-        const cards = db.card!.eqJoin(db.deck!, "deckId", "$loki", (l, r) => {
-            const {$loki, nextReview} = l;
-            return {
-                id: $loki,
-                nextReview,
-                deck: r.name,
-                tag: l.tag || []
-            };
-        }).where((d) => {
-            return tag.length > 0 ? (d.tag.length > 0 && tag.every((t: string) => d.tag.indexOf(t) !== -1)) : true;
-        }).find({deck: {$regex: `${XRegExp.escape(deck)}(/.+)?`}}).data();
+        if (req.body.deck) {
+            cond.deck = {$regex: `${XRegExp.escape(req.body.deck)}(/.+)?`};
+        }
+        if (req.body.due) {
+            const due: any[] = req.body.due;
+            cond.nextReview = {$and: [
+                {$exists: true},
+                {$lt: moment().add(due[0], due[1]).toDate()}
+            ]};
+        }
 
-        const due = duePair ? moment().add(duePair[0], duePair[1]) : new Date();
+        const cards = getQuery().find(cond).data();
 
-        return res.json(cards
-            .filter((c) => (!c.nextReview || moment(c.nextReview).toDate() < due))
-            .map((c) => c.id));
+        return res.json(cards.map((c) => c.id));
     }
 
     public static render(req: Request, res: Response): Response {

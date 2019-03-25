@@ -1,7 +1,7 @@
 import UserDb from ".";
 import ZhDb from "../zhdb";
 import Config from "../config";
-import XRegExp from "xregexp";
+import cLevelJson from "../zhdb/cLevel.json";
 
 export function getQuery(userDb?: UserDb, zhDb?: ZhDb) {
     if (!userDb) {
@@ -16,57 +16,51 @@ export function getQuery(userDb?: UserDb, zhDb?: ZhDb) {
         const {front, back, note, tag, srsLevel, nextReview, template, vocab} = l;
         const deck = r.name;
         return {id: l.$loki, front, back, note, tag, srsLevel, nextReview, template, vocab, deck};
+    }).eqJoin(zhDb!.token!, (c) => {
+        let entry: string | undefined = c.vocab;
+
+        if (!entry) {
+            const m = c.template ? /^v\/(\S+)/.exec(c.template) : null;
+            if (m) {
+                entry = m[1];
+            }
+        }
+
+        if (!entry) {
+            const m = c.back ? /^## (\S+)/.exec(c.back) : null;
+            if (m) {
+                entry = m[1];
+            }
+        }
+
+        return entry || "";
+    }, (t) => t.entry, (l, r) => {
+        delete l.$loki;
+        return {
+            ...l,
+            vocab: r.entry,
+            tLevel: r.level,
+            vLevel: r.level ? r.level.vocab : undefined
+        };
     }).map((el) => {
-        let entry: string | undefined = el.vocab;
-
-        if (!entry) {
-            const m = el.template ? /^v\/(\S+)/.exec(el.template) : null;
-            if (m) {
-                entry = m[1];
+        el.cLevels = el.vocab ? el.vocab.split("").map((c: string) => {
+            for (const lv of Object.keys(cLevelJson)) {
+                if ((cLevelJson as any)[lv].indexOf(c) !== -1) {
+                    return parseInt(lv);
+                }
             }
-        }
+            return null;
+        }).filter((lv: number | null) => lv) : [];
 
-        if (!entry) {
-            const m = el.back ? /^## (\S+)/.exec(el.back) : null;
-            if (m) {
-                entry = m[1];
-            }
-        }
-
-        let level: number | undefined;
-        let levels: number[] | undefined;
-
-        const token = zhDb!.token!.findOne({entry});
-        if (token && token.level) {
-            level = token.level.vocab;
-        }
-
-        if (!level && entry) {
-            const cond = entry.split("").filter((c) => XRegExp("\\p{Han}").test(c));
-            const tokens = zhDb!.token!.chain().find({entry: {$in: cond}}).sort((a, b) => {
-                return (a.level && b.level) ? (b.level!.hanzi || 100) - (a.level!.hanzi || 100) : 0;
-            }).data();
-
-            if (tokens.length > 0 && tokens[0].level) {
-                level = tokens[0].level.hanzi;
-                // @ts-ignore
-                levels = tokens.filter((t) => t.level).map((t) => t.level!.hanzi).filter((lv) => lv);
-            }
+        if (el.cLevels.length > 0) {
+            el.cLevel = Math.max(...el.cLevels);
         }
 
         delete el.$loki;
-        delete el.vocab;
-
-        const levelType = levels ? "hanzi" : "vocab";
 
         return {
             ...el,
-            vocab: entry,
-            level,
-            levels,
-            levelType,
-            cLevel: levelType === "hanzi" ? level : undefined,
-            vLevel: levelType === "vocab" ? level : undefined
+            level: el.cLevel && el.cLevel < el.vLevel ? el.cLevel : el.vLevel
         };
     });
 

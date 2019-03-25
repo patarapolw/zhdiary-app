@@ -16,7 +16,10 @@ class DeckController {
         }
         if (req.body.due) {
             const due: any[] = req.body.due;
-            cond.nextReview = moment().add(due[0], due[1]).toDate();
+            cond.nextReview = {$and: [
+                {$exists: true},
+                {$lt: moment().add(due[0], due[1]).toDate()}
+            ]};
         }
 
         const decks = getQuery().find(cond).data().map((d) => d.deck);
@@ -35,7 +38,10 @@ class DeckController {
         }
         if (req.body.due) {
             const due: any[] = req.body.due;
-            cond.nextReview = moment().add(due[0], due[1]).toDate();
+            cond.nextReview = {$and: [
+                {$exists: true},
+                {$lt: moment().add(due[0], due[1]).toDate()}
+            ]};
         }
 
         const cards = getQuery().find(cond).data();
