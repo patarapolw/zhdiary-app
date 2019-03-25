@@ -132,9 +132,9 @@ async function nodeAddStat(id: string) {
 
     $(`#${id}`).append(`
     <div class="tree-score float-right text-align-right">
-        <span class="tree-due tree-score-child mr-3">${stat.due}</span>
+        <span class="tree-new tree-score-child mr-3">${stat.new}</span>
         <span class="tree-leech tree-score-child mr-3">${stat.leech}</span>
-        <span class="tree-new tree-score-child">${stat.new}</span>
+        <span class="tree-due tree-score-child">${stat.due}</span>
     </div>
     `);
 }

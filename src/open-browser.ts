@@ -4,7 +4,7 @@ import Config from "./server/config";
 
 (async () => {
     const start = (new Date()).getSeconds();
-    while ((new Date()).getSeconds() - start < 5) {
+    while ((new Date()).getSeconds() - start < 10) {
         try {
             const r = await new Promise((resolve, reject) => {
                 http.get(`http://localhost:${Config.PORT}/`, (res) => resolve(res))

@@ -33,12 +33,14 @@ export class TemplateController {
 
         if (s.length === 0) {
             s = await getOnlineSentence(vocab);
-            zhDb.sentence!.insert(s.map((el) => {
-                return {
-                    ...el,
-                    source: "jukuu"
-                } as ISentence;
-            }));
+            s.forEach((el) => {
+                try {
+                    zhDb.sentence!.insertOne({
+                        ...el,
+                        source: "jukuu"
+                    } as ISentence);
+                } catch (e) {}
+            });
         }
 
         return res.json({v, s});

@@ -209,6 +209,8 @@ export class DbEditor {
                 stickyFooter: false,
                 closeMethods: ["button", "escape"],
                 onOpen: () => {
+                    this.$el.newEntry.removeClass("was-validated");
+
                     for (const col of settings.columns) {
                         if (col.type === "markdown") {
                             this.mde[col.name].value(col.template || "");
