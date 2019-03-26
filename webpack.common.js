@@ -7,7 +7,7 @@ function generateEntry(xs) {
 }
 
 module.exports = {
-    entry: generateEntry(["cardEditor", "deckViewer"]),
+    entry: generateEntry(["index"]),
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: "[name].min.js"

@@ -21,7 +21,7 @@ html, body {
     }
 
     .db-editor-table {
-        height: calc(100% - 60px);
+        height: 100%;
         overflow: scroll;
 
         thead, thead th {
@@ -90,4 +90,8 @@ img {
 
 * {
     word-wrap: break-word;
+}
+
+.page-control {
+    white-space: nowrap;
 }

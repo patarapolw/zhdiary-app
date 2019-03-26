@@ -77,42 +77,44 @@ export class DbEditor {
             </nav>`);
         }
 
-        $("nav .navbar-nav").append(`
-        <li class="nav-item">
-            <div class="page-control">
-                <button class="btn d-inline mr-1 db-editor-prev-all" disabled="disabled">
-                    &#x3C;&#x3C;
+        if ($(".db-editor-nav").length === 0) {
+            $("nav .navbar-nav").append(`
+            <li class="nav-item db-editor-nav">
+                <div class="page-control">
+                    <button class="btn d-inline mr-1 db-editor-prev-all" disabled="disabled">
+                        &#x3C;&#x3C;
+                    </button>
+                    <button class="btn d-inline mr-1 db-editor-prev" disabled="disabled">
+                        &#x3C;
+                    </button>
+                    <span class="d-inline mr-3 db-editor-number-current">
+                        0-0
+                    </span>
+                    <span class="d-inline mr-3">
+                        of
+                    </span>
+                    <span class="d-inline mr-1 db-editor-number-total">
+                        0
+                    </span>
+                    <button class="btn d-inline mr-1 db-editor-next" disabled="disabled">
+                        &#x3E;
+                    </button>
+                    <button class="btn d-inline db-editor-next-all" disabled="disabled">
+                        &#x3E;&#x3E;
+                    </button>
+                </div>
+            </li>
+            <li class="nav-item db-editor-nav db-editor-new-entry-button-nav">
+                <button class="btn btn-primary ml-3 mr-3 db-editor-new-entry-button form-control" type="button">
+                    Add new entry
                 </button>
-                <button class="btn d-inline mr-1 db-editor-prev" disabled="disabled">
-                    &#x3C;
-                </button>
-                <span class="d-inline mr-3 db-editor-number-current">
-                    0-0
-                </span>
-                <span class="d-inline mr-3">
-                    of
-                </span>
-                <span class="d-inline mr-1 db-editor-number-total">
-                    0
-                </span>
-                <button class="btn d-inline mr-1 db-editor-next" disabled="disabled">
-                    &#x3E;
-                </button>
-                <button class="btn d-inline db-editor-next-all" disabled="disabled">
-                    &#x3E;&#x3E;
-                </button>
-            </div>
-        </li>
-        <li class="nav-item db-editor-new-entry-button-nav">
-            <button class="btn btn-primary ml-3 mr-3 db-editor-new-entry-button form-control" type="button">
-                Add new entry
-            </button>
-        </li>`);
+            </li>`);
 
-        $("nav .navbar-collapse").append(`
-        <div class="my-2 my-lg-0 col-lg-6 float-right">
-            <input class="form-control mr-sm-2 col-12 db-editor-search-bar" autocomplete="false" />
-        </div>`);
+            $("nav .navbar-collapse").append(`
+            <div class="my-2 my-lg-0 col-lg-6 float-right db-editor-nav">
+                <input class="form-control mr-sm-2 col-12 db-editor-search-bar" autocomplete="false" />
+            </div>`);
+        }
 
         this.$el.main.addClass("db-editor");
         this.$el.main.html(`

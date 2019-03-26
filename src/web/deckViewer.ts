@@ -10,11 +10,43 @@ import { IDbEditorSettings, IJqList, IMdeList, IModalList } from "./dbEditor/dbE
 import SimpleMDE from "simplemde";
 import tingle from "tingle.js";
 import flatpickr from "flatpickr";
-import "./common";
 
 let uuidToDeck = {} as any;
 let jstree: any = null;
 let q: string = "";
+
+export function initDeckViewer() {
+    const $app = $("#App");
+
+    $app.addClass("container").html(deckViewerHtml);
+    const $nav = $("nav");
+    if ($nav.length > 0) {
+        $app.css("height", `calc(100% - ${$nav[0].offsetHeight}px`);
+    }
+    loadJstree();
+
+    $("#search-bar").on("input", (e) => {
+        q = $(e.target).val() as string;
+        loadJstree();
+    });
+
+    const entryEditor = new EntryEditor({
+        el: $app[0],
+        endpoint: "/api/editor/",
+        templateApi: "/api/template/",
+        convert: (s) => md2html(s),
+        columns: [
+            {name: "deck", width: 200, type: "one-line", required: true},
+            {name: "template", width: 150, type: "one-line"},
+            {name: "front", width: 500, type: "markdown", required: true},
+            {name: "back", width: 500, type: "markdown"},
+            {name: "tag", width: 150, type: "list", separator: " "},
+            {name: "note", width: 300, type: "markdown"},
+            {name: "srsLevel", width: 150, type: "number", label: "SRS Level"},
+            {name: "nextReview", width: 200, type: "datetime", label: "Next Review"}
+        ]
+    });
+}
 
 async function loadJstree() {
     const deckList = await fetchJSON("/api/deck/filter", {q});
@@ -421,33 +453,4 @@ class EntryEditor {
     }
 }
 
-$(() => {
-    $("#App").addClass("container").html(deckViewerHtml);
-    const $nav = $("nav");
-    if ($nav.length > 0) {
-        $("#App").css("height", `calc(100% - ${$nav[0].offsetHeight}px`);
-    }
-    loadJstree();
-
-    $("#search-bar").on("input", (e) => {
-        q = $(e.target).val() as string;
-        loadJstree();
-    });
-});
-
-const entryEditor = new EntryEditor({
-    el: document.getElementById("App")!,
-    endpoint: "/api/editor/",
-    templateApi: "/api/template/",
-    convert: (s) => md2html(s),
-    columns: [
-        {name: "deck", width: 200, type: "one-line", required: true},
-        {name: "template", width: 150, type: "one-line"},
-        {name: "front", width: 500, type: "markdown", required: true},
-        {name: "back", width: 500, type: "markdown"},
-        {name: "tag", width: 150, type: "list", separator: " "},
-        {name: "note", width: 300, type: "markdown"},
-        {name: "srsLevel", width: 150, type: "number", label: "SRS Level"},
-        {name: "nextReview", width: 200, type: "datetime", label: "Next Review"}
-    ]
-});
+export default initDeckViewer;

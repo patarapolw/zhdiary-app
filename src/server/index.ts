@@ -25,15 +25,18 @@ import nunjucks from "nunjucks";
     app.use("/api", apiRouter);
 
     app.get("/", (req, res) => {
-        res.redirect("/deckViewer");
-    });
-
-    app.get("/:p", (req, res) => {
         res.render("layout/withNav.html", {
             title: "中文 Diary",
-            js: `${req.params.p}.min.js`
+            js: `index.min.js`
         });
     });
+
+    // app.get("/:p", (req, res) => {
+    //     res.render("layout/withNav.html", {
+    //         title: "中文 Diary",
+    //         js: `${req.params.p}.min.js`
+    //     });
+    // });
 
     app.listen(Config.PORT, () => {
         console.log(`Server listening on ${Config.PORT}`);
