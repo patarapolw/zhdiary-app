@@ -121,15 +121,19 @@ export class LokiDb {
 
         const now = new Date();
 
-        return this.card.insert(ts.map((t) => {
-            return {
-                front: t.front,
-                back: t.back,
-                entry: t.entry,
-                template: t.name,
-                created: now
-            };
-        })).map((c) => c.$loki);
+        return ts.map((t) => {
+            try {
+                return this.card.insertOne({
+                    front: t.front,
+                    back: t.back,
+                    entry: t.entry,
+                    template: t.name,
+                    created: now
+                });
+            } catch (e) {
+                return;
+            }
+        }).filter((c) => c).map((c) => c!.$loki);
     }
 
     public update(u: Partial<IEntry>) {

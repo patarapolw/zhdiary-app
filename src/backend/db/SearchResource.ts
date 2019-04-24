@@ -36,9 +36,9 @@ export class SearchResource {
             delete l.$loki;
             delete l.tag;
 
-            const {$loki, front, back, mnemonic, srsLevel, nextReview, created, modified, deckId, tag} = r;
+            const {$loki, front, back, mnemonic, srsLevel, nextReview, created, modified, deckId, tag, template} = r;
             return {...l, cardId: $loki, front, back, mnemonic, srsLevel, nextReview, created, modified, deckId,
-                tag: [...tag0, ...(tag || [])]};
+                tag: [...tag0, ...(tag || [])], template};
         }).eqJoin(this.userDb.deck, "deckId", "$loki", (l, r: IDbDeck) => {
             delete l.$loki;
             delete l.deckId;

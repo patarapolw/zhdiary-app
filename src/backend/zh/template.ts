@@ -26,8 +26,14 @@ export function getTemplateFromData(v: IDbDataVocab, ss: IDbDataSentence[]): ITe
         }))
     ]).outerHTML);
 
-    return [
+    const templates = [
         {name: "EC", front: td.turndown(h("h4", v.english).outerHTML), back, entry: v.simplified},
         {name: "SE", front: td.turndown(h("h4", v.simplified).outerHTML), back, entry: v.simplified}
     ];
+
+    if (v.traditional) {
+        templates.push({name: "TE", front: td.turndown(h("h4", v.traditional).outerHTML), back, entry: v.simplified});
+    }
+
+    return templates;
 }

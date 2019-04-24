@@ -56,6 +56,13 @@ export class SearchParser {
                 return {$and: [el[0], el[2]]};
             }),
             Expr: (r) => P.alt(
+                r.PosExpr,
+                r.NegExpr
+            ),
+            NegExpr: (r) => P.string("-").then(r.PosExpr).map((x) => {
+                return {$not: x};
+            }),
+            PosExpr: (r) => P.alt(
                 r.FullExpr,
                 r.PartialExpr
             ),
@@ -160,19 +167,7 @@ export class SearchParser {
                     default:
                 }
 
-                let k0 = k;
-                if (k === "template") {
-                    k0 = "template.name";
-                } else if (k === "model") {
-                    k0 = "template.model";
-                } else if (k === "entry") {
-                    k0 = "note.name";
-                }
-
-                return {$or: [
-                    {[k0]: v},
-                    {[`data.${k}`]: v}
-                ]};
+                return {[k]: v};
             }),
             Value: (r) => P.alt(
                 r.Number,
@@ -183,7 +178,7 @@ export class SearchParser {
                 r.RawString,
                 r.QuoteString
             ),
-            RawString: () => P.regexp(/[^" :>=<~]+/),
+            RawString: () => P.regexp(/[^-" :>=<~]+/),
             QuoteString: (r) => r.Quote.then(r.Value).skip(r.Quote),
             Quote: () => P.string('"'),
             Op: () => P.alt(
@@ -214,18 +209,20 @@ export default SearchParser;
 export function mongoToFilter(cond: any): (item: any) => boolean {
     return (item: any) => {
         for (const k of Object.keys(cond)) {
-            if (["$and", "$or"].indexOf(k) !== -1) {
-                const ck: any[] = cond[k];
-
+            if (k[0] === "$") {
                 if (k === "$and") {
+                    const ck: any[] = cond[k];
                     return ck.every((c) => mongoToFilter(c)(item));
-                } else {
+                } else if (k === "$or") {
+                    const ck: any[] = cond[k];
                     return ck.some((c) => mongoToFilter(c)(item));
+                } else if (k === "$not") {
+                    return !mongoToFilter(cond[k])(item);
                 }
             } else {
                 const ck: any = cond[k];
 
-                if (typeof ck === "object" && Object.keys(ck).some((c) => c[0] === "$")) {
+                if (ck && typeof ck === "object" && Object.keys(ck).some((c) => c[0] === "$")) {
                     return mongoCompare(item[k], ck);
                 } else {
                     if (Array.isArray(item[k])) {
@@ -250,7 +247,11 @@ function mongoCompare(v: any, ck: any): boolean {
         const v0 = ck[op];
 
         if (op === "$regex") {
-            return new RegExp(v0.toString()).test(v);
+            if (Array.isArray(v)) {
+                return v.some((b) => new RegExp(v0.toString()).test(b));
+            } else {
+                return new RegExp(v0.toString()).test(v);
+            }
         } else if (op === "$gte") {
             return v >= v0;
         } else if (op === "$gt") {

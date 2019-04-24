@@ -11,6 +11,7 @@ interface ITreeViewStat {
     new: number;
     leech: number;
     due: number;
+    total: number;
 }
 
 export interface ITreeViewItem {
@@ -47,7 +48,7 @@ class QuizController {
                 const fullName = deck.join("/");
                 // const thisDeckData = deckData.filter((d) => new RegExp(`^${XRegExp.escape(fullName)}`).test(d.deck));
                 let thisDeckData: any[] = [];
-                if (fullName === "pool") {
+                if (fullName === "@Pool") {
                     thisDeckData = deckData;
                 } else if (/^HSK/.test(fullName)) {
                     const [_, tag] = fullName.split("/");
@@ -61,7 +62,8 @@ class QuizController {
                     stat: {
                         new: thisDeckData.filter((d) => !d.nextReview).length,
                         leech: thisDeckData.filter((d) => d.srsLevel === 0).length,
-                        due: thisDeckData.filter((d) => d.nextReview && moment(d.nextReview).toDate() < now).length
+                        due: thisDeckData.filter((d) => d.nextReview && moment(d.nextReview).toDate() < now).length,
+                        total: thisDeckData.length
                     }
                 });
             }
@@ -70,12 +72,12 @@ class QuizController {
         const rSearch = new SearchResource();
         const cond = rSearch.parse(req.body.q);
 
-        const deckData = rSearch.getQuery().find(cond).data();
+        const deckData = rSearch.getQuery().where(mongoToFilter(cond)).data();
 
         const now = new Date();
 
         const deckList: string[] = [
-            "pool",
+            "@Pool",
             "HSK/HSK1",
             "HSK/HSK2",
             "HSK/HSK3",
@@ -101,6 +103,8 @@ class QuizController {
             recurseParseData(fullData, deck);
         });
 
+        // console.log(fullData);
+
         return res.json(fullData);
     }
 
@@ -111,7 +115,7 @@ class QuizController {
         if (req.body.deck) {
             const deckName = req.body.deck;
 
-            if (deckName === ".Pool") {
+            if (deckName === "@Pool") {
 
             } else if (/^HSK/.test(deckName)) {
                 const [_, tag] = deckName.split("/");
