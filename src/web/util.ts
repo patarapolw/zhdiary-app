@@ -1,5 +1,4 @@
 import showdown from "showdown";
-import XRegExp from "xregexp";
 
 export function shuffle(a: any[]) {
     for (let i = a.length - 1; i > 0; i--) {
@@ -7,23 +6,6 @@ export function shuffle(a: any[]) {
         [a[i], a[j]] = [a[j], a[i]];
     }
     return a;
-}
-
-const mdConverter = new showdown.Converter({
-    tables: true
-});
-
-mdConverter.setFlavor("github");
-
-export function md2html(s: string): string {
-    if (!s) {
-        return "";
-    }
-
-    s = XRegExp.replace(s, XRegExp("([\\p{Han}，、“”0-9]*\\p{Han}[\\p{Han}，、“”0-9]*)", "g"),
-    `<span class="zh-speak">$1</span>`);
-
-    return mdConverter.makeHtml(s);
 }
 
 export function toTitle(s: string) {
@@ -42,10 +24,20 @@ export async function fetchJSON(url: string, data: any = {}, method?: string): P
     try {
         return await res.json();
     } catch (e) {
-        if (res.status < 300) {
+        if (res.status < 400) {
             return res.status;
+        } else if (res.status === 403) {
+            return location.reload();
         } else {
             throw new Error(res.statusText);
         }
     }
+}
+
+const md = new showdown.Converter({
+    tables: true
+});
+
+export function md2html(s?: string) {
+    return md.makeHtml(s || "");
 }

@@ -1,20 +1,16 @@
 const path = require("path");
 
-function generateEntry(xs) {
-    const e = {};
-    xs.forEach((x) => e[x] = path.resolve(__dirname, `src/web/${x}.ts`));
-    return e;
-}
-
 module.exports = {
-    entry: generateEntry(["index"]),
-    output: {
-        path: path.resolve(__dirname, "dist"),
-        filename: "[name].min.js"
-    },
-    module: {
-        rules: [
-            {
+    web: {
+        entry: {
+            index: "./src/web/index.ts"
+        },
+        output: {
+            path: path.resolve(__dirname, "dist"),
+            filename: "[name].min.js"
+        },
+        module: {
+            rules: [{
                 test: /\.(css|scss)$/,
                 use: [
                     "style-loader",
@@ -46,7 +42,7 @@ module.exports = {
                     loader: "file-loader",
                     options: {
                         name: "[name].[ext]",
-                        outputPath: "fonts/"
+                        outputPath: "fonts"
                     }
                 }]
             },
@@ -56,9 +52,9 @@ module.exports = {
                     loader: 'file-loader',
                     options: {
                         name: '[name].[ext]',
-                        outputPath: "images/"
+                        outputPath: "images"
                     },
-                }, ],
+                },],
             },
             {
                 test: require.resolve("jquery"),
@@ -70,13 +66,17 @@ module.exports = {
                     options: "$"
                 }]
             }
-        ]
-    },
-    resolve: {
-        extensions: [
-            ".tsx",
-            ".ts",
-            ".js"
-        ]
+            ]
+        },
+        resolve: {
+            extensions: [
+                ".tsx",
+                ".ts",
+                ".js"
+            ],
+            alias: {
+                'vue$': 'vue/dist/vue.esm.js'
+            }
+        }
     }
 };
