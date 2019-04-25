@@ -45,7 +45,7 @@ export default class DbEditor extends Vue {
 
     public render(m: CreateElement) {
         return m("div", {
-            style: {"overflow-x": "scroll"}
+            style: {"overflow-x": "scroll", "height": "100%"}
         }, [
             m(EntryEditor, {
                 ref: "entryEditor",
@@ -60,7 +60,8 @@ export default class DbEditor extends Vue {
             m(CellEditorList, {ref: "editorList", on: {save: this.updateCell}}),
             m(CellEditorMd, {ref: "editorMd", on: {save: this.updateCell}}),
             m("table", {
-                class: ["table", "table-striped"]
+                class: ["table", "table-striped"],
+                style: {height: "100%"}
             }, [
                 m("thead", [
                     m("tr", [

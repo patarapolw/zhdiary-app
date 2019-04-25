@@ -36,14 +36,13 @@ export default class QuizArea extends Vue {
                 },
                 on: {save: this.onEntryUpdated}
             }),
+            m("img", {
+                domProps: {src: "/asset/Spinner-1s-200px.svg"},
+                style: {height: "5em", display: this.isLoading ? "block" : "none", margin: "0 auto"}
+            }),
             m("div", {
                 class: ["quiz-area"]
-            }, [
-                m("img", {
-                    domProps: {src: "/asset/Spinner-1s-200px.svg"},
-                    style: {height: "5em", display: this.isLoading ? "block" : "none", margin: "0 auto"}
-                })
-            ])
+            })
         ]);
     }
 

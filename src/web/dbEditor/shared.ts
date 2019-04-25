@@ -1,7 +1,7 @@
 export const dbEditorState = {
     cardEditor: {
         data: [] as any[],
-        sortBy: "deck",
+        sortBy: "front",
         desc: false
     },
     editor: {

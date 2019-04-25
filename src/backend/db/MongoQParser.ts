@@ -112,6 +112,10 @@ export class SearchParser {
                     } else if (v === "new") {
                         k = "srsLevel";
                         v = "NULL";
+                    } else if (v === "marked") {
+                        k = "tag";
+                        op = "=";
+                        v = "marked";
                     }
                 }
 
@@ -195,7 +199,7 @@ export class SearchParser {
     }
 
     public parse(s?: string) {
-        const r = this.lang.Input.parse(s || "");
+        const r = this.lang.Input.parse((s || "").trim());
         if (!r.status) {
             return {};
         } else {

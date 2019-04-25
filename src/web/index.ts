@@ -67,14 +67,14 @@ const app = new Vue({
                                 props: {to: "/editor"}
                             }, "Editor")
                         ]),
-                        m("li", {
-                            class: ["nav-item", this.$route.path === "/importExport" ? "active" : ""]
-                        }, [
-                            m("router-link", {
-                                class: ["nav-link"],
-                                props: {to: "/importExport"}
-                            }, "Import")
-                        ]),
+                        // m("li", {
+                        //     class: ["nav-item", this.$route.path === "/importExport" ? "active" : ""]
+                        // }, [
+                        //     m("router-link", {
+                        //         class: ["nav-link"],
+                        //         props: {to: "/importExport"}
+                        //     }, "Import")
+                        // ]),
                         m("li", {
                             class: ["nav-item"]
                         }, [

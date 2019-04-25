@@ -72,7 +72,7 @@ class QuizController {
         const rSearch = new SearchResource();
         const cond = rSearch.parse(req.body.q);
 
-        const deckData = rSearch.getQuery().where(mongoToFilter(cond)).data();
+        const deckData = rSearch.getQuery().filter(mongoToFilter(cond));
 
         const now = new Date();
 
@@ -112,6 +112,8 @@ class QuizController {
         const search = new SearchResource();
         let cond = search.parse(req.body.q);
 
+        const andCond = [cond];
+
         if (req.body.deck) {
             const deckName = req.body.deck;
 
@@ -119,22 +121,26 @@ class QuizController {
 
             } else if (/^HSK/.test(deckName)) {
                 const [_, tag] = deckName.split("/");
-                cond.tag = tag;
+                andCond.push({tag});
             } else {
-                cond.deck = {$regex: `${XRegExp.escape(req.body.deck)}(/.+)?`};
+                andCond.push({deck: {$regex: `${XRegExp.escape(req.body.deck)}(/.+)?`}});
             }
         }
 
-        cond = {$and: [
-            cond,
-            {$or: [
+        if (req.body.due) {
+            const d: any[] = req.body.due;
+            andCond.push({nextReview: {$lt: moment().add(d[0], d[1]).toISOString()}});
+        } else {
+            andCond.push({$or: [
                 {nextReview: {$exists: false}},
                 {nextReview: {$in: [null, ""]}},
-                {nextReview: {$lt: new Date()}}
-            ]}
-        ]};
+                {nextReview: {$lt: new Date().toISOString()}}
+            ]});
+        }
 
-        const cards = search.getQuery().where(mongoToFilter(cond)).data().map((c) => {
+        cond = {$and: andCond};
+
+        const cards = search.getQuery().filter(mongoToFilter(cond)).map((c) => {
             return {
                 id: c.cardId,
                 entry: c.entry

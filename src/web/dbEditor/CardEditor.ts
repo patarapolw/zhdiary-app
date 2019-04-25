@@ -2,6 +2,7 @@ import { Vue, Component } from "vue-property-decorator";
 import { CreateElement } from "vue";
 import DbEditor from "./DbEditor";
 import globalState from "../shared";
+import dbEditorState from "./shared";
 
 @Component
 export default class CardEditor extends Vue {
@@ -9,7 +10,7 @@ export default class CardEditor extends Vue {
         return m(DbEditor, {props: {
             cols: globalState.cols,
             editorApi: globalState.cardEditorApi,
-            sortBy: "deck"
+            sortBy: dbEditorState.cardEditor.sortBy
         }});
     }
 }

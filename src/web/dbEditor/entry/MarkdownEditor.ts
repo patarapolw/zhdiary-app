@@ -10,7 +10,7 @@ export default class MarkdownEditor extends Vue {
     public render(m: CreateElement) {
         return m("div", {
             class: ["mde", "row"],
-            style: {width: "100%", height: "100px", overflow: "hidden"}
+            style: {width: "100%", height: "150px", overflow: "hidden"}
         }, [
             m("textarea", {
                 class: ["mde-textarea", "form-control", "col-6"],

@@ -2,21 +2,51 @@ import { Request, Response, Router } from "express";
 import SearchResource from "../../db/SearchResource";
 import asyncHandler from "express-async-handler";
 import Config from "../../config";
+import { mongoToFilter } from "../../db/MongoQParser";
 
 class EditorController {
     public static find(req: Request, res: Response): Response {
         const rSearch = new SearchResource();
         const cond = rSearch.parse(req.body.q);
-        cond.cardId = {$exists: true};
+        cond.cardId = { $exists: true };
+        const filter = mongoToFilter(cond);
 
         const offset: number = req.body.offset;
         const limit: number = req.body.limit;
-        const sortBy: string = req.body.sortBy || "deck";
+        const sortBy: string = req.body.sortBy || "front";
         const desc: boolean = req.body.desc || false;
 
         return res.json({
-            data: rSearch.getQuery().find(cond).simplesort(sortBy, desc).offset(offset).limit(limit).data(),
-            count: rSearch.getQuery().find(cond).count()
+            data: rSearch.getQuery().filter(filter).sort((a, b) => {
+                function convert(x: any) {
+                    let s = x[sortBy];
+                    if (s === undefined) {
+                        s = -Infinity;
+                    }
+                    return s;
+                }
+
+                function compare() {
+                    const m = convert(a);
+                    const n = convert(b);
+                    if (typeof m === "string" && typeof n === "string") {
+                        return m.localeCompare(n);
+                    } else if (typeof m === "string") {
+                        return 1;
+                    } else if (typeof n === "string") {
+                        return -1;
+                    } else {
+                        return m - n;
+                    }
+                }
+
+                return desc ? -compare() : compare();
+            }).slice(offset, offset + limit).map((c) => {
+                delete c.id;
+                c.id = c.cardId;
+                return c;
+            }),
+            count: rSearch.getQuery().filter(filter).length
         });
     }
 
@@ -24,7 +54,7 @@ class EditorController {
         const db = Config.userDb!;
 
         const $loki: number = req.body.id;
-        const card = db.card.findOne({$loki});
+        const card = db.card.findOne({ $loki });
 
         return res.json(card);
     }
@@ -34,7 +64,7 @@ class EditorController {
         const vocab: string | string[] = req.body.create;
         const $loki = (await db.create(Config.zhDb!, typeof vocab === "string" ? [vocab] : vocab))[0];
 
-        return res.json({id: $loki});
+        return res.json({ id: $loki });
     }
 
     public static async update(req: Request, res: Response): Promise<Response> {
