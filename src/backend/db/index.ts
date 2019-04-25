@@ -95,9 +95,9 @@ export class LokiDb {
         entries = [];
 
         for (const k of Object.keys(subEntries)) {
-            const ss = subEntries[k].filter((s: any) => !(/^variant of/i.test(s.english) || /^surname/i.test(s.english) || s.english.indexOf(s.simplified) !== -1));
+            const ss = subEntries[k].filter((s: any) => !(/variant of/i.test(s.english) || /^surname/i.test(s.english) || s.english.indexOf(s.simplified) !== -1));
             if (ss.length === 0) {
-                entries.push(subEntries[0]);
+                entries.push(subEntries[k][0]);
             } else {
                 entries.push(ss[0]);
             }
