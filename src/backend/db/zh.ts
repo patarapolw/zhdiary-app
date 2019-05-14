@@ -18,7 +18,7 @@ export interface IDbDataToken {
     var?: string[];
     frequency?: number;
     vocabLevel?: number;
-    hanziLevel?: number;
+    hanziLevel?: number[];
     tag?: string[];
 }
 

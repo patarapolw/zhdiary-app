@@ -105,3 +105,4 @@ dmypy.json
 .pyre/
 user/
 user.*
+.DS_store

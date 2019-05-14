@@ -51,7 +51,7 @@ app.on("will-finish-launching", () => {
 app.on("ready", () => {
     createWindow(openedFilePath);
 
-    const template: MenuItemConstructorOptions[] = [
+    const template: any[] = [
         {
             label: "Application",
             submenu: [
