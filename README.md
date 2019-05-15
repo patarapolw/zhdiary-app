@@ -12,6 +12,12 @@ See <https://github.com/patarapolw/zhdiary-app/releases>
 - `yarn install`, `yarn run build` and `yarn start`. The web browser will be automatically opened.
 - `yarn run dev` to run in development mode (i.e. you can edit the code, live).
 
+## Resources
+
+- Chinese-English dictionary from <https://www.mdbg.net/>
+- Example sentences from <https://tatoeba.org/>
+- Categorical vocabularies entered manually from local bookstores
+
 ## Screenshots
 
 ![](/screenshots/quiz0.png)
