@@ -1,6 +1,6 @@
 {
   "name": "zhdiary-app",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Zhdiary flashcard and diary app",
   "main": "dist/electron.min.js",
   "repository": "https://zhlevel.herokuapp.com",

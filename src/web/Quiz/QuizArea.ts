@@ -60,7 +60,13 @@ export default class QuizArea extends Vue {
             this.state.isQuizStarted = false;
             this.isLoading = false;
 
-            $quizArea.html(h("div", `${cards.length.toLocaleString()} entries to go...`).outerHTML);
+            $quizArea.html(`
+            <div>
+                <div class="warning-tooltip"
+                    title="Select Chinese text and right-click to speak"></div>
+                ${cards.length.toLocaleString()} entries to go...
+            </div>`);
+
             if (cards.length > 0) {
                 shuffle(cards);
 

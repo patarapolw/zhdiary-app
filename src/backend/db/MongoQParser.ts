@@ -116,6 +116,9 @@ export class SearchParser {
                         k = "tag";
                         op = "=";
                         v = "marked";
+                    } else if (v === "pool") {
+                        k = "template";
+                        v = "NULL";
                     }
                 }
 

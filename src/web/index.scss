@@ -2,7 +2,9 @@
 @import "~bootstrap-vue/src/index.scss";
 @import "~flatpickr/dist/flatpickr.min";
 
-html, body, #App {
+html,
+body,
+#App {
     height: 100%;
 }
 
@@ -31,7 +33,7 @@ img {
 }
 
 textarea {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: "Courier New", Courier, monospace;
     resize: none;
 }
 
@@ -47,7 +49,8 @@ pre {
     display: inline-block;
 }
 
-.clear, .clear * {
+.clear,
+.clear * {
     background-color: rgba($color: #fff, $alpha: 0);
     border: 0px;
 }
@@ -86,10 +89,19 @@ table {
     overflow: hidden;
 }
 
-input.form-control:read-only, textarea.form-control:read-only {
+input.form-control:read-only,
+textarea.form-control:read-only {
     background-color: #fff;
 }
 
 .hidden {
     display: none;
+}
+
+.warning-tooltip {
+    position: fixed;
+    width: 1px;
+    height: 1px;
+    top: 0;
+    left: 0;
 }

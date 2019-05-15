@@ -11,7 +11,7 @@ export default class SearchBar extends Vue {
             ref: "searchBar",
             class: ["form-control", "mr-sm-2"],
             style: {minWidth: "400px", display: this.state.isActive ? "inline-block" : "none"},
-            domProps: {placeholder: "Type here to search", autocomplete: false},
+            domProps: {placeholder: "Type here to search", autocomplete: false, value: this.state.q},
             on: {keypress: (e: any) => {
                 if (e.key === "Enter") {
                     this.onChange(e.target.value || "");

@@ -30,7 +30,7 @@ export default class DeckArea extends Vue {
         }, [
             m("input", {
                 class: ["form-control", "mt-3", "search-bar"],
-                domProps: {placeholder: "Type here to search"},
+                domProps: {placeholder: "Type here to search", value: this.state.q},
                 on: {keypress: (e: any) => {
                     if (e.key === "Enter") {
                         this.state.q = e.target.value;

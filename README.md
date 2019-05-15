@@ -12,6 +12,17 @@ See <https://github.com/patarapolw/zhdiary-app/releases>
 - `yarn install`, `yarn run build` and `yarn start`. The web browser will be automatically opened.
 - `yarn run dev` to run in development mode (i.e. you can edit the code, live).
 
+## Search bar ("query language") reference
+
+- `is:new` to get new flashcards
+- `is:pool` to get non-autocreated flashcards
+- `is:leech` to get `srsLevel=0` flashcards
+- `is:due` to get `due=NOW` flashcards
+- `is:marked` to get `tag:marked` flashcards
+- Use `OR` to join inclusive OR clauses
+- Parentheses (`()`) are also supported
+- For more, see [/src/backend/db/MongoQParser.ts](/src/backend/db/MongoQParser.ts)
+
 ## Resources
 
 - Chinese-English dictionary from <https://www.mdbg.net/>
