@@ -94,7 +94,7 @@
   "build": {
     "appId": "io.github.patarapolw.zhdiary",
     "directories": {
-      "output": "build"
+      "output": "release"
     },
     "mac": {
       "category": "public.app-category.education",
