@@ -1,6 +1,5 @@
 import XRegExp from "xregexp";
 import url from "url";
-import $ from "jquery";
 import { CreateElement } from "vue";
 import { Vue, Component } from "vue-property-decorator";
 import { fetchJSON } from "../util";
@@ -19,11 +18,11 @@ export default class Vocab extends Vue {
         const q = urlJson.q as string;
 
         if (is && this.current.is !== is) {
-            this.parseVocab([is]);
             this.current.is = is;
+            this.parseVocab([this.current.is]);
         } else if (this.current.q !== q) {
-            this.parseJieba(q);
             this.current.q = q;
+            this.parseJieba(this.current.q);
         }
 
         let currentVocab = this.vocabList[this.i];
@@ -33,7 +32,7 @@ export default class Vocab extends Vue {
             this.sentenceList = [];
         } else {
             if (this.current.simplified !== currentVocab.simplified) {
-                $.post("/dict/sentence", { entry: currentVocab.simplified }).then((res) => {
+                fetchJSON("/dict/sentence", { entry: currentVocab.simplified }).then((res) => {
                     this.sentenceList = res;
                     this.current.simplified = currentVocab.simplified;
                 });
@@ -95,7 +94,7 @@ export default class Vocab extends Vue {
                             m("a", {
                                 domProps: {href:
                                     `https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=${
-                                        this.current.q || currentVocab.simplified}`},
+                                        this.q || currentVocab.simplified}`},
                                 attrs: {target: "_blank"}
                             }, "Open in MDBG")
                         ])
@@ -142,12 +141,13 @@ export default class Vocab extends Vue {
 
     private parseJieba(s: string) {
         if (s.length > 0) {
-            fetchJSON("/jieba/", { entry: s }).then((res) => {
-                const distinctVocabList = res
+            fetchJSON("http://localhost:33436/jieba/cut", { entry: s }).then((res) => {
+                const distinctVocabList = res.result
                     .filter((el: string, _i: number, self: any) => {
                         return XRegExp("\\p{Han}").test(el) && self.indexOf(el) === _i;
                     });
 
+                console.log(distinctVocabList);
                 this.parseVocab(distinctVocabList);
             });
         }

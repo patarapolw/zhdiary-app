@@ -1,16 +1,16 @@
-// import jieba from "nodejieba";
-import { Router, Request, Response } from "express";
+// import jieba from "jieba-js";
+// import { Router, Request, Response } from "express";
 
-class JiebaController {
-    public static cut(req: Request, res: Response): Response {
-        const entry: string = req.body.entry;
+// class JiebaController {
+//     public static cut(req: Request, res: Response): Response {
+//         const entry: string = req.body.entry;
 
-        return res.json([entry]);
-    }
-}
+//         return res.json(jieba.cutSync(entry));
+//     }
+// }
 
-const router = Router();
+// const router = Router();
 
-router.post("/", JiebaController.cut);
+// router.post("/", JiebaController.cut);
 
-export default router;
+// export default router;

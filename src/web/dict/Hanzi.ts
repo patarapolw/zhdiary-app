@@ -19,7 +19,6 @@ export default class Hanzi extends Vue {
     private hanziList: string[] = [];
     private currentHanzi: string = "";
 
-    private current: any = {};
     private i: number = 0;
     private IsHanRegex = XRegExp("\\p{Han}");
 
@@ -90,9 +89,9 @@ export default class Hanzi extends Vue {
 
         const q = url.parse(location.hash.substring(2), true).query.q as string;
 
-        if (this.current.q !== q) {
-            this.parseHanziList(q);
-            this.current.q = q;
+        if (this.q !== q) {
+            this.q = q;
+            this.parseHanziList(this.q);
         }
 
         if (this.currentHanzi !== this.hanziList[this.i] && this.hanziList[this.i] !== undefined) {
@@ -164,7 +163,7 @@ export default class Hanzi extends Vue {
                         this.radical.sub ? this.radical.sub.map((el: string) => getCharacterBlock(el)) : []),
                     m("div", {class: ["row"]}, [m("h4", "Supercompositions")]),
                     m("div", {class: ["row", "hanzi-list"]},
-                        this.radical.sub ? this.radical.sub.map((el: string) => getCharacterBlock(el)) : []),
+                        this.radical.sup ? this.radical.sup.map((el: string) => getCharacterBlock(el)) : []),
                     m("div", {class: ["row"]}, [m("h4", "Variants")]),
                     m("div", {class: ["row", "hanzi-list"]},
                         this.radical.var ? this.radical.var.map((el: string) => getCharacterBlock(el)) : []),

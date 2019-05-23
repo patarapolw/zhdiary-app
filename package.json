@@ -1,6 +1,6 @@
 {
   "name": "zhdiary-app",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Zhdiary flashcard and diary app",
   "main": "dist/electron.min.js",
   "repository": "https://zhlevel.herokuapp.com",
@@ -82,15 +82,14 @@
     "start": "yarn run serve",
     "dev": "concurrently 'yarn run serve:watch' 'yarn run front:watch'",
     "serve": "node -r esm .",
-    "serve:watch": "rimraf build && concurrently 'yarn run tsc:watch' 'wait-on build/server.js && nodemon -w build -r esm build/server.js'",
+    "serve:watch": "rimraf build && concurrently 'yarn run tsc:watch' 'wait-on build/server.js && nodemon -w build -r esm build/server.js' 'poetry run python pyserver.py'",
     "front:watch": "rimraf dist && webpack --watch --config webpack.dev.js",
     "build": "yarn run tsc && rimraf dist && webpack --config webpack.prod.js",
     "tsc": "tsc -p src/backend",
     "tsc:watch": "tsc -w -p src/backend",
     "electron:start": "electron .",
-    "electron:compile": "rimraf dist && webpack --config ./webpack.prod.js --progress --colors",
-    "electron:build": "rimraf release && yarn run electron:compile && electron-builder",
-    "postinstall": "install-app-deps"
+    "electron:compile": "rimraf dist && pyinstaller pyserver.py --onefile --noconsole && webpack --config ./webpack.prod.js --progress --colors",
+    "electron:build": "rimraf release && yarn run electron:compile && electron-builder"
   },
   "build": {
     "appId": "io.github.patarapolw.zhdiary",
@@ -107,6 +106,9 @@
       "views/**/*",
       "public/**/*",
       "dist/node_modules/**/*"
+    ],
+    "asarUnpack": [
+      "dist/pyserver"
     ]
   }
 }

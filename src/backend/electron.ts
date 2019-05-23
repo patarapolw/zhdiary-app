@@ -1,10 +1,11 @@
 import { app, BrowserWindow, Menu, MenuItemConstructorOptions, ipcMain, shell } from "electron";
 import path from "path";
-import { fork } from "child_process";
+import { fork, spawn } from "child_process";
 import waitOn from "wait-on";
 import Config from "./config";
 
 const serverProcess = fork(path.join(__dirname, "./server.min.js"));
+const pythonProcess = spawn(path.join(__dirname.replace("app.asar", "app.asar.unpacked"), "./pyserver"));
 
 let mainWindow: Electron.BrowserWindow | null;
 let openedFilePath: string | null = null;
@@ -88,6 +89,7 @@ app.on("ready", () => {
 app.on("window-all-closed", () => {
     // if (process.platform !== 'darwin') {
     serverProcess.kill();
+    pythonProcess.kill();
     app.quit();
     // }
 });

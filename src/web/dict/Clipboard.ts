@@ -26,8 +26,8 @@ export default class Clipboard extends Vue {
                 class: ["col-md-6", "c-container"]
             }, [
                 m(Vue.component("pre-text-segment", (resolve) => {
-                    fetchJSON("/jieba/", {entry: this.clipboardText}).then((res) => {
-                        const textSegments = [...res.map((el: string) => {
+                    fetchJSON("http://localhost:33436/jieba/cut", {entry: this.clipboardText}).then((res) => {
+                        const textSegments = [...res.result.map((el: string) => {
                             return XRegExp("\\p{Han}").test(el) ? m("ruby", [
                                 m("rt", pinyin(el)),
                                 el

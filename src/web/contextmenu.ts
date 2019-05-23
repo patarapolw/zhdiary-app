@@ -2,6 +2,7 @@ import $ from "jquery";
 import "jquery-contextmenu";
 import "jquery-contextmenu/dist/jquery.contextMenu.css";
 import XRegExp from "xregexp";
+import { openNewWindow } from "./util";
 
 // @ts-ignore
 $.contextMenu({
@@ -56,20 +57,19 @@ $.contextMenu({
                     parseHanzi: {
                         name: "Parse Hanzi",
                         callback() {
-                            open(`#/dict/hanzi?q=${encodeURIComponent(s)}`, "_blank");
+                            openNewWindow(`#/dict/hanzi?q=${encodeURIComponent(s)}`);
                         }
                     },
                     parseVocab: {
                         name: "Parse vocab",
                         callback() {
-                            open(`#/dict/vocab?q=${encodeURIComponent(s)}`, "_blank");
+                            openNewWindow(`#/dict/vocab?q=${encodeURIComponent(s)}`);
                         }
                     },
                     openInMdbg: {
                         name: "Open in MDBG",
                         callback() {
-                            open(`https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=${s}`,
-                            "_blank");
+                            openNewWindow(`https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=${s}`);
                         }
                     }
                 }

@@ -12,9 +12,9 @@ export function toTitle(s: string) {
     return s[0].toLocaleUpperCase() + s.slice(1);
 }
 
-export async function fetchJSON(url: string, data: any = {}, method?: string): Promise<any> {
+export async function fetchJSON(url: string, data: any = {}, method: string = "POST"): Promise<any> {
     const res = await fetch(url, {
-        method: method || "POST",
+        method,
         headers: {
             "Content-Type": "application/json; charset=utf-8"
         },
@@ -40,4 +40,12 @@ const md = new showdown.Converter({
 
 export function md2html(s?: string) {
     return md.makeHtml(s || "");
+}
+
+export function openNewWindow(url: string) {
+    if (process && process.versions.hasOwnProperty('electron')) {
+        location.href = url;
+    } else {
+        open(url, "_blank");
+    }
 }
