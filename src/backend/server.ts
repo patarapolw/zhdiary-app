@@ -2,6 +2,8 @@ import express from "express";
 import bodyParser from "body-parser";
 import cardRouter from "./route/card";
 import quizRouter from "./route/quiz";
+import jiebaRouter from "./route/jieba";
+import dictRouter from "./route/dict";
 // import ioRouter from "./route/io";
 import ejs from "ejs";
 import path from "path";
@@ -25,6 +27,8 @@ app.use(express.static(path.join(__dirname, "../dist")));
 app.use(bodyParser.json());
 app.use("/card", cardRouter);
 app.use("/quiz", quizRouter);
+app.use("/jieba", jiebaRouter);
+app.use("/dict", dictRouter);
 // app.use("/io")
 
 app.get("/", (req, res) => {

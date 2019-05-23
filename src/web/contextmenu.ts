@@ -40,15 +40,36 @@ $.contextMenu({
         const selection = window.getSelection();
 
         if (selection && XRegExp("\\p{Han}").test(selection.toString())) {
+            const s = selection.toString().replace(/(<ruby>|<\/ruby>|<rt>[^<]*<\/rt>)/gi, "");
+
             return {
                 items: {
                     speak: {
                         name: "Speak",
                         callback() {
-                            const u = new SpeechSynthesisUtterance(selection.toString());
+                            const u = new SpeechSynthesisUtterance(s);
                             u.lang = "zh-CN";
                             u.rate = 0.8;
                             window.speechSynthesis.speak(u);
+                        }
+                    },
+                    parseHanzi: {
+                        name: "Parse Hanzi",
+                        callback() {
+                            open(`#/dict/hanzi?q=${encodeURIComponent(s)}`, "_blank");
+                        }
+                    },
+                    parseVocab: {
+                        name: "Parse vocab",
+                        callback() {
+                            open(`#/dict/vocab?q=${encodeURIComponent(s)}`, "_blank");
+                        }
+                    },
+                    openInMdbg: {
+                        name: "Open in MDBG",
+                        callback() {
+                            open(`https://www.mdbg.net/chinese/dictionary?page=worddict&wdrst=0&wdqb=${s}`,
+                            "_blank");
                         }
                     }
                 }

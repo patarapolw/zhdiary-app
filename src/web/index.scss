@@ -2,6 +2,12 @@
 @import "~bootstrap-vue/src/index.scss";
 @import "~flatpickr/dist/flatpickr.min";
 
+@font-face {
+    font-family: HanaMin;
+    src: url(/fonts/HanaMinA.ttf),
+        url(/fonts/HanaMinB.ttf);
+}
+
 html,
 body,
 #App {
@@ -104,4 +110,170 @@ textarea.form-control:read-only {
     height: 1px;
     top: 0;
     left: 0;
+}
+
+.hanzi-display {
+    font-size: 200px;
+    font-family: HanaMin;
+    margin-top: 0.2em;
+    padding-right: 0.3em;
+    text-align: right;
+    overflow-y: hidden;
+    border: none;
+    border-collapse: collapse;
+}
+
+.vocab-display {
+    font-size: 100px;
+    font-family: HanaMin;
+    margin-top: 0.2em;
+    text-align: center;
+    border: none;
+    border-collapse: collapse;
+}
+
+.character-block div {
+    font-family: "HanaMin";
+    height: 1.2em;
+    width: 1.2em;
+    background: rgba(0, 0, 0, 0);
+    border: none;;
+    font-size: 30px;
+}
+
+.character-block-hover {
+    position: absolute;
+    font-size: 60px !important;
+    left: -9999px;
+    -webkit-box-shadow: 0 0 30px 30px rgba(255, 255, 255, 0.5) inset;
+    -moz-box-shadow: 0 0 30px 30px rgba(255, 255, 255, 0.5) inset;
+    box-shadow: 0 0 30px 30px rgba(255, 255, 255, 0.5) inset;
+    z-index: 10;
+}
+
+.vocab-segment {
+    display: inline-block;
+}
+
+.button-prev-next button {
+    width: 150px;
+    font-size: 16px;
+}
+
+.align-right {
+    text-align: right;
+}
+
+.pinyin-list {
+    height: 50px;
+    overflow-y: scroll;
+}
+
+.hanzi-list, .vocab-list {
+    height: 100px;
+    overflow-y: scroll;
+}
+
+.sentence-list {
+    height: 200px;
+    overflow-y: scroll;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.vocab-small-display {
+    font-size: 50px;
+    font-family: HanaMin;
+    height: 100px;
+}
+
+.inline {
+    width: 100%;
+}
+
+.inline * {
+    display: inline-block;
+    margin-right: 0.5em;
+}
+
+*:focus {
+    outline: none;
+}
+
+*::-webkit-scrollbar {
+    display: none;
+}
+
+.c-input:hover {
+    color: #2980b9;
+}
+
+ruby {
+    display: inline-block !important;
+}
+
+rt {
+    visibility: hidden;
+}
+
+ruby:hover rt {
+    visibility: visible;
+}
+
+pre {
+    font-size: 30px;
+    word-break: break-all;
+    white-space: pre-wrap;
+}
+
+.parse-textarea {
+    resize: none;
+    width: 95%;
+    height: 300px;
+    font-size: 16spx;
+    padding: 10px;
+    border-radius: 5px;
+    border-color: #bdc3c7;
+}
+
+.zh-srs-cat0 {
+    color: rgb(255, 255, 255);
+}
+
+.zh-srs-cat1 {
+    color: #f6e58d;
+}
+
+.zh-srs-cat2 {
+    color: #ffbe76;
+}
+
+.zh-srs-cat3 {
+    color: #6ab04c;
+}
+
+.zh-srs-cat4 {
+    color: #4834d4;
+}
+
+.zh-srs-cat5 {
+    color: black;
+}
+
+.hidden {
+    display: none;
+}
+
+.no-scroll {
+    overflow: hidden;
+}
+
+.zh-contextmenu {
+    cursor: context-menu;
+}
+
+.zh-edit {
+    cursor: pointer;
 }

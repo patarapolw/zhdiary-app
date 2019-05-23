@@ -8,7 +8,7 @@ export class SearchResource {
     private userDb: LokiDb;
     private parser: SearchParser;
 
-    constructor(userDb?: LokiDb, zhDb?: ZhLokiDb, anyOf: string[] = ["template", "entry", "front", "back", "note", "deck"]) {
+    constructor(userDb?: LokiDb, zhDb?: ZhLokiDb, anyOf: string[] = ["entry", "tag"]) {
         this.userDb = userDb || Config.userDb!;
         this.zhDb = zhDb || Config.zhDb!;
 

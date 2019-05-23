@@ -89,7 +89,8 @@
     "tsc:watch": "tsc -w -p src/backend",
     "electron:start": "electron .",
     "electron:compile": "rimraf dist && webpack --config ./webpack.prod.js --progress --colors",
-    "electron:build": "rimraf release && yarn run electron:compile && electron-builder"
+    "electron:build": "rimraf release && yarn run electron:compile && electron-builder",
+    "postinstall": "install-app-deps"
   },
   "build": {
     "appId": "io.github.patarapolw.zhdiary",
