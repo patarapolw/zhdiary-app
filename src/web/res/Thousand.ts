@@ -6,15 +6,25 @@ import tText from "./1000.txt";
 export default class Thousand extends Vue {
     public render(m: CreateElement) {
         return m("div", {
-            class: ["container"]
+            class: ["container", "c-container"]
         }, [
-            m("table", {
-                class: ["table", "table-striped", "c-container"]
-            }, [
-                m("tbody", tText.split("\n").map((r) => {
-                    return m("tr", r);
-                }))
-            ])
+            m("div", {
+                style: {whiteSpace: "nowrap"}
+            }, tText.split("\n\n").map((seg) => {
+                return m("table", {
+                    class: ["table", "table-striped"],
+                    style: {
+                        display: "inline-block",
+                        verticalAlign: "top",
+                        width: "initial",
+                        marginRight: "1em"
+                    }
+                }, [
+                    m("tbody", seg.split("\n").map((r) => {
+                        return m("tr", r);
+                    }))
+                ])
+            }))
         ])
     }
 }

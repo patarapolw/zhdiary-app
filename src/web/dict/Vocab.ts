@@ -9,20 +9,22 @@ export default class Vocab extends Vue {
     private i = 0;
     private vocabList: any[] = [];
     private sentenceList: any[] = [];
-    private current: any = {};
+
     private q: string = "";
+    private is: string = "";
+    private currentSimplified: string = "";
 
     public render(m: CreateElement) {
         const urlJson = url.parse(location.hash.substring(2), true).query;
         const is = urlJson.is as string;
         const q = urlJson.q as string;
 
-        if (is && this.current.is !== is) {
-            this.current.is = is;
-            this.parseVocab([this.current.is]);
-        } else if (this.current.q !== q) {
-            this.current.q = q;
-            this.parseJieba(this.current.q);
+        if (is && this.is !== is) {
+            this.is = is;
+            this.parseVocab([this.is]);
+        } else if (this.q !== q) {
+            this.q = q;
+            this.parseJieba(this.q);
         }
 
         let currentVocab = this.vocabList[this.i];
@@ -31,10 +33,10 @@ export default class Vocab extends Vue {
             currentVocab = {};
             this.sentenceList = [];
         } else {
-            if (this.current.simplified !== currentVocab.simplified) {
+            if (this.currentSimplified !== currentVocab.simplified) {
                 fetchJSON("/dict/sentence", { entry: currentVocab.simplified }).then((res) => {
                     this.sentenceList = res;
-                    this.current.simplified = currentVocab.simplified;
+                    this.currentSimplified = currentVocab.simplified;
                 });
             }
         }

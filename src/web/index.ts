@@ -13,6 +13,7 @@ import Hanzi from "./dict/Hanzi";
 import Vocab from "./dict/Vocab";
 import "./contextmenu";
 import Thousand from "./res/Thousand";
+import Resource from "./res/Resource";
 
 Vue.use(VueRouter);
 Vue.use(BootstrapVue);
@@ -26,7 +27,8 @@ const router = new VueRouter({
         {name: "clipboard", path: "/clipboard", component: Clipboard},
         {name: "dictHanzi", path: "/dict/hanzi", component: Hanzi},
         {name: "dictVocab", path: "/dict/vocab", component: Vocab},
-        {name: "thousand", path: "/res/thousand", component: Thousand}
+        {name: "thousand", path: "/res/thousand", component: Thousand},
+        {path: "/res/:category", component: Resource}
     ]
 });
 
@@ -117,10 +119,35 @@ const app = new Vue({
                                     class: ["dropdown-item"],
                                     props: {to: "/res/thousand"}
                                 }, "千字文"),
-                                m("router-link", {
-                                    class: ["dropdown-item"],
-                                    props: {to: "/res/category"}
-                                }, "Categories")
+                                m("div", {
+                                    class: ["dropdown-item", "dropdown", "dropdown-submenu"]
+                                }, [
+                                    m("a", {
+                                        class: ["dropdown-toggle"],
+                                        attrs: {"role": "button", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "false"},
+                                        domProps: {href: "#"},
+                                        style: {
+                                            color: "inherit",
+                                            textDecoration: "inherit"
+                                        }
+                                    }, "Categories"),
+                                    m("div", {
+                                        class: ["dropdown-menu"]
+                                    }, [
+                                        m("router-link", {
+                                            class: ["dropdown-item"],
+                                            props: {to: "/res/body"}
+                                        }, "Body"),
+                                        m("router-link", {
+                                            class: ["dropdown-item"],
+                                            props: {to: "/res/verb"}
+                                        }, "Verb"),
+                                        m("router-link", {
+                                            class: ["dropdown-item"],
+                                            props: {to: "/res/politics"}
+                                        }, "Politics")
+                                    ])
+                                ])
                             ])
                         ]),
                         m("li", {
