@@ -1,6 +1,6 @@
 {
   "name": "zhdiary-app",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Zhdiary flashcard and diary app",
   "main": "dist/electron.min.js",
   "repository": "https://zhlevel.herokuapp.com",
@@ -88,7 +88,7 @@
     "tsc": "tsc -p src/backend",
     "tsc:watch": "tsc -w -p src/backend",
     "electron:start": "electron .",
-    "electron:compile": "rimraf dist && pyinstaller pyserver.py --onefile --noconsole && webpack --config ./webpack.prod.js --progress --colors",
+    "electron:compile": "rimraf dist && poetry run pyinstaller pyserver.py --onefile --noconsole && webpack --config ./webpack.prod.js --progress --colors",
     "electron:build": "rimraf release && yarn run electron:compile && electron-builder"
   },
   "build": {
