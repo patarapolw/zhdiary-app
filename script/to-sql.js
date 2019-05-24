@@ -1,6 +1,5 @@
 import sqlite3 from "better-sqlite3";
-import ZhLokiDb from "../backend/db/zh";
-// @ts-ignore
+import ZhLokiDb from "../build/db/zh";
 import pinyinConverter from "chinese-to-pinyin";
 
 (async () => {

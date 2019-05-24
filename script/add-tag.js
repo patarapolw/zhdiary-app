@@ -1,4 +1,4 @@
-import ZhLokiDb from "../backend/db/zh";
+import ZhLokiDb from "../build/db/zh";
 import fs from "fs";
 
 (async () => {
@@ -6,7 +6,7 @@ import fs from "fs";
 
     const content = fs.readFileSync("resource/生词.md", "utf8");
     let title = "";
-    let vs: string[] = [];
+    let vs = [];
 
     for (const row of content.split("\n")) {
         if (row[0] === "#") {

@@ -1,9 +1,9 @@
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
-import ZhLokiDb from "../backend/db/zh";
+import ZhLokiDb from "../build/db/zh";
 dotenv.config();
 
-export const mongoClient = new MongoClient(process.env.MONGO_URI!, { useNewUrlParser: true });
+export const mongoClient = new MongoClient(process.env.MONGO_URI, { useNewUrlParser: true });
 
 (async () => {
     await mongoClient.connect();

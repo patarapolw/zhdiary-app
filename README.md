@@ -31,11 +31,7 @@ See <https://github.com/patarapolw/zhdiary-app/releases>
 
 ## Screenshots
 
-![](/screenshots/quiz0.png)
-
-![](/screenshots/quiz1.png)
-
-![](/screenshots/editor1.png)
+![](/screenshots/quiz.png)
 
 ## Related projects
 
