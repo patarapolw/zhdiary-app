@@ -1,20 +1,48 @@
-import { IColumn } from "./DbEditor";
+import { ITreeViewItem } from "./quiz/TreeviewItem";
 
-export const globalState = {
-    deckApi: "/deck/",
-    quizApi: "/quiz/",
-    templateApi: "/template/",
-    cardEditorApi: "/card/editor/",
-    cols: [
-        {name: "front", width: 400, type: "markdown", required: true},
-        {name: "back", width: 400, type: "markdown"},
-        {name: "tag", width: 150, type: "list", separator: " "},
-        {name: "mnemonic", width: 300, type: "markdown"},
-        {name: "srsLevel", width: 150, type: "number", label: "SRS Level", newEntry: false},
-        {name: "nextReview", width: 200, type: "datetime", label: "Next Review", newEntry: false}
-    ] as IColumn[],
-    dateFormat: "Y-M-d H:i",
-    entryEditor: {} as any
-};
-
-export default globalState;
+export const treeviewData: ITreeViewItem[] = [
+    {
+        name: "All vocabularies",
+        query: "template:vocab/*",
+        children: [
+            {
+                name: "HSK",
+                query: "tag:HSK",
+                children: [
+                    {
+                        name: "HSK1",
+                        query: "tag:HSK1"
+                    },
+                    {
+                        name: "HSK2",
+                        query: "tag:HSK2"
+                    },
+                    {
+                        name: "HSK3",
+                        query: "tag:HSK3"
+                    },
+                    {
+                        name: "HSK4",
+                        query: "tag:HSK4"
+                    },
+                    {
+                        name: "HSK5",
+                        query: "tag:HSK5"
+                    },
+                    {
+                        name: "HSK6",
+                        query: "tag:HSK6"
+                    }
+                ]
+            },
+            // {
+            //     name: "Categories",
+            //     query: ""
+            // }
+        ]
+    },
+    {
+        name: "All sentences",
+        query: "template:sentence/*"
+    }
+];

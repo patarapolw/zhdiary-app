@@ -1,0 +1,24 @@
+.flatten {
+    display: none;
+}
+
+.needs-validation.was-validated {
+    .form-not-required {
+        border: 1px solid #28a745;
+        border-radius: 0.25rem;
+    }
+
+    .form-required {
+        border: 1px solid red;
+        border-radius: 0.25rem;
+    }
+}
+
+#toast-container .toast-close-button {
+    font: inherit;
+    margin-top: 0.2em;
+
+    &:hover {
+        color: blue;
+    }
+}

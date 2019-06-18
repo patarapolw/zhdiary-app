@@ -1,174 +1,105 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Counter from "./DbEditor/component/Counter";
-import SearchBar from "./DbEditor/component/SearchBar";
 import "./index.scss";
-import Quiz from "./Quiz/Quiz";
 import BootstrapVue from "bootstrap-vue";
 import "bootstrap";
-import CardEditor from "./DbEditor/CardEditor";
-import ImportExport from "./ImportExport";
-import Clipboard from "./dict/Clipboard";
-import Hanzi from "./dict/Hanzi";
-import Vocab from "./dict/Vocab";
+import $ from "jquery";
+import { slowClick } from "./util";
+import h from "hyperscript";
+import QuizUi from "./quiz/QuizUi";
 import "./contextmenu";
-import Thousand from "./res/Thousand";
-import Resource from "./res/Resource";
+import EditorUi from "./editor/EditorUi";
+import LessonUi from "./lesson/LessonUi";
+import HanziUi from "./reference/HanziUi";
+import VocabUi from "./reference/VocabUi";
+import ThousandUi from "./reference/ThousandUi";
+import ClipboardUi from "./reference/ClipboardUi";
+import SettingsUi from "./settings/SettingsUi";
+
+$(() => {
+    $(document.body).on("mousedown", "button", (evt) => {
+        const $this = $(evt.target);
+        $this.prop("disabled", true);
+        slowClick($this);
+    })
+});
+
 
 Vue.use(VueRouter);
 Vue.use(BootstrapVue);
 
 const router = new VueRouter({
     routes: [
-        {name: "default", path: "/", component: Quiz},
-        {name: "quiz", path: "/quiz", component: Quiz},
-        {name: "cardEditor", path: "/editor", component: CardEditor},
-        {name: "importExport", path: "/importExport", component: ImportExport},
-        {name: "clipboard", path: "/clipboard", component: Clipboard},
-        {name: "dictHanzi", path: "/dict/hanzi", component: Hanzi},
-        {name: "dictVocab", path: "/dict/vocab", component: Vocab},
-        {name: "thousand", path: "/res/thousand", component: Thousand},
-        {path: "/res/:category", component: Resource}
+        {path: "/", component: QuizUi},
+        {path: "/quiz", component: QuizUi},
+        {path: "/editor", component: EditorUi},
+        {path: "/lesson", component: LessonUi},
+        {path: "/ref/hanzi", component: HanziUi},
+        {path: "/ref/vocab", component: VocabUi},
+        {path: "/ref/1000", component: ThousandUi},
+        {path: "/ref/clipboard", component: ClipboardUi},
+        {path: "/settings", component: SettingsUi}
     ]
 });
 
 const app = new Vue({
     router,
-    components: {Counter, SearchBar},
-    render(m) {
-        return m("div", {class: ["h-100"]}, [
-            m("nav", {
-                class: ["navbar", "navbar-expand-lg", "navbar-light", "bg-light"]
-            }, [
-                m("a", {
-                    class: ["navbar-brand"],
-                    domProps: {href: "#"}
-                }, "中文 Diary"),
-                m("button", {
-                    class: ["navbar-toggler"],
-                    attrs: {
-                        "data-target": "#navbarSupportedContent",
-                        "data-toggle": "collapse",
-                        "type": "button"
-                    }
-                }, [
-                    m("span", {class: "navbar-toggler-icon"})
-                ]),
-                m("div", {
-                    class: ["collapse", "navbar-collapse"],
-                    attrs: {id: "navbarSupportedContent"}
-                }, [
-                    m("ul", {
-                        class: ["navbar-nav", "mr-auto"]
-                    }, [
-                        m("li", {
-                            class: ["nav-item", this.$route.path === "/quiz" ? "active" : ""]
-                        }, [
-                            m("router-link", {
-                                class: ["nav-link"],
-                                props: {to: "/quiz"}
-                            }, "Quiz")
-                        ]),
-                        m("li", {
-                            class: ["nav-item", this.$route.path === "/editor" ? "active" : ""]
-                        }, [
-                            m("router-link", {
-                                class: ["nav-link"],
-                                props: {to: "/editor"}
-                            }, "Editor")
-                        ]),
-                        m("li", {
-                            class: ["nav-item", "dropdown"]
-                        }, [
-                            m("a", {
-                                class: ["nav-link", "dropdown-toggle"],
-                                attrs: {"id": "navbarDropdown", "role": "button", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "false"},
-                                domProps: {href: "#"}
-                            }, "Dictionaries"),
-                            m("div", {
-                                class: ["dropdown-menu"],
-                                attrs: {"aria-labelledby": "navbarDropdown"}
-                            }, [
-                                m("router-link", {
-                                    class: ["dropdown-item"],
-                                    props: {to: "/clipboard"}
-                                }, "Clipboard parser"),
-                                m("router-link", {
-                                    class: ["dropdown-item"],
-                                    props: {to: "/dict/hanzi"}
-                                }, "Hanzi"),
-                                m("router-link", {
-                                    class: ["dropdown-item"],
-                                    props: {to: "/dict/vocab"}
-                                }, "Vocab")
-                            ])
-                        ]),
-                        m("li", {
-                            class: ["nav-item", "dropdown"]
-                        }, [
-                            m("a", {
-                                class: ["nav-link", "dropdown-toggle"],
-                                attrs: {"id": "navbarDropdownResource", "role": "button", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "false"},
-                                domProps: {href: "#"}
-                            }, "Resources"),
-                            m("div", {
-                                class: ["dropdown-menu"],
-                                attrs: {"aria-labelledby": "navbarDropdownResource"}
-                            }, [
-                                m("router-link", {
-                                    class: ["dropdown-item"],
-                                    props: {to: "/res/thousand"}
-                                }, "千字文"),
-                                m("div", {
-                                    class: ["dropdown-item", "dropdown", "dropdown-submenu"]
-                                }, [
-                                    m("a", {
-                                        class: ["dropdown-toggle"],
-                                        attrs: {"role": "button", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "false"},
-                                        domProps: {href: "#"},
-                                        style: {
-                                            color: "inherit",
-                                            textDecoration: "inherit"
-                                        }
-                                    }, "Categories"),
-                                    m("div", {
-                                        class: ["dropdown-menu"]
-                                    }, [
-                                        m("router-link", {
-                                            class: ["dropdown-item"],
-                                            props: {to: "/res/body"}
-                                        }, "Body"),
-                                        m("router-link", {
-                                            class: ["dropdown-item"],
-                                            props: {to: "/res/verb"}
-                                        }, "Verb"),
-                                        m("router-link", {
-                                            class: ["dropdown-item"],
-                                            props: {to: "/res/politics"}
-                                        }, "Politics")
-                                    ])
-                                ])
-                            ])
-                        ]),
-                        m("li", {
-                            class: ["nav-item"]
-                        }, [
-                            m("a", {
-                                class: ["nav-link"],
-                                domProps: {href: "https://github.com/patarapolw/zhdiary-app"},
-                                attrs: {target: "_blank"}
-                            }, "About")
-                        ]),
-                        m(Counter)
-                    ]),
-                    m("ul", {
-                        class: ["navbar-nav"]
-                    }, [
-                        m(SearchBar)
-                    ])
-                ])
+    template: h(".row.stretched", [
+        h("b-nav.nav-left", {attrs: {"vertical": ""}}, [
+            h("b-nav-item", {attrs: {to: "/quiz"}}, [
+                h("i.far.fa-question-circle.nav-icon", {attrs: {
+                    "v-b-tooltip.hover": "",
+                    title: "Quiz"
+                }})
             ]),
-            m("router-view")
-        ]);
-    }
+            h("b-nav-item", {attrs: {to: "/editor"}}, [
+                h("i.far.fa-edit.nav-icon", {attrs: {
+                    "v-b-tooltip.hover": "",
+                    title: "Editor"
+                }}),
+            ]),
+            h("b-nav-item", {attrs: {to: "/lesson"}}, [
+                h("i.fas.fa-school.nav-icon", {attrs: {
+                    style: "transform: scale(0.8); margin-left: -0.1em;",
+                    "v-b-tooltip.hover": "",
+                    title: "Lessons"
+                }})
+            ]),
+            h("b-nav-item-dropdown", {attrs: {
+                "no-caret": "",
+                "dropright": ""
+            }}, [
+                h("template", {
+                    attrs: {slot: "button-content"},
+                    innerHTML: h("i.fas.fa-journal-whills.nav-icon", {attrs: {
+                        style: "margin-left: 0.1em",
+                        "v-b-tooltip.hover": "",
+                        title: "References"
+                    }}).outerHTML
+                }),
+                h("b-dropdown-item", {attrs: {to: "/ref/hanzi"}}, "Hanzi"),
+                h("b-dropdown-item", {attrs: {to: "/ref/vocab"}}, "Vocab"),
+                h("b-dropdown-divider"),
+                h("b-dropdown-item", {attrs: {to: "/ref/1000"}}, "千字文"),
+                h("b-dropdown-divider"),
+                h("b-dropdown-item", {attrs: {to: "/ref/clipboard"}}, "Clipboard parser")
+            ]),
+            h("b-nav-item", {attrs: {to: "/settings"}}, [
+                h("i.fas.fa-cog.nav-icon", {attrs: {
+                    "v-b-tooltip.hover": "",
+                    title: "Settings"
+                }}),
+            ]),
+            h("b-nav-item", {attrs: {href: "https://github.com/patarapolw/zhdiary-app", target: "_blank"}}, [
+                h("i.fab.fa-github.nav-icon", {attrs: {
+                    "v-b-tooltip.hover": "",
+                    title: "GitHub"
+                }})
+            ]),
+        ]),
+        h(".separate-vertical"),
+        h(".body", {style: {overflow: "scroll"}}, [
+            h("router-view")
+        ])
+    ]).outerHTML
 }).$mount("#App");

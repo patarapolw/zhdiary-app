@@ -1,0 +1,12 @@
+@import "~flatpickr/dist/flatpickr.min";
+
+.datetime-nullable {
+    > input {
+        background-color: white !important;
+    }
+}
+
+.col-form-label,
+.datetime-nullable.input-group {
+    padding: 0;
+}

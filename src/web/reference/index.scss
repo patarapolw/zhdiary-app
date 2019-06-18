@@ -1,0 +1,27 @@
+@font-face {
+    font-family: HanaMin;
+    src: url(/fonts/HanaMinA.ttf),
+        url(/fonts/HanaMinB.ttf);
+}
+
+.btn-prev-next {
+    button {
+        width: 150px;
+        font-size: 16px;
+    }
+}
+
+.pinyin-list {
+    height: 50px;
+    overflow-y: scroll;
+}
+
+.hanzi-list, .vocab-list {
+    height: 100px;
+    overflow-y: scroll;
+}
+
+.sentence-list {
+    height: 200px;
+    overflow-y: scroll;
+}

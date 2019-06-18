@@ -5,11 +5,10 @@ module.exports = [
     {
         mode: "production",
         entry: {
-            server: "./src/backend/server.ts",
-            electron: "./src/backend/electron.ts"
+            electron: "./src/node/electron.ts"
         },
         output: {
-            path: path.join(__dirname, "./dist"),
+            path: path.join(__dirname, "dist"),
             filename: "[name].min.js"
         },
         target: "electron-main",
@@ -34,9 +33,6 @@ module.exports = [
     },
     {
         mode: "production",
-        entry: {
-            index: "./src/web/index.ts"
-        },
         target: "electron-renderer",
         node: {
             __dirname: false,

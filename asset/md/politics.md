@@ -1,0 +1,26 @@
+# Politics
+
+- 交涉 [jiao1 she4] to negotiate (with)/to have dealings (with)
+- 共产党 共產黨 [Gong4 chan3 dang3] Communist Party
+- 国营企业 國營企業 [guo2 ying2 qi3 ye4] nationalized industry
+- 慈善 [ci2 shan4] benevolent/charitable
+- 抗议 抗議 [kang4 yi4] to protest/protest
+- 拉票 [la1 piao4] to campaign for votes/to ask voters for support
+- 政治 [zheng4 zhi4] politics/political
+- 东盟 東盟 [Dong1 Meng2] ASEAN/abbr. for 東南亞國家聯盟|东南亚国家联盟[Dong1 nan2 ya4 Guo2 jia1 Lian2 meng2]
+- 法律 [fa3 lu:4] law/CL:條|条\[tiao2\], 套\[tao4\], 個|个\[ge4\]
+- 海军 海軍 [hai3 jun1] navy
+- 滋味 [zi1 wei4] taste/flavor/feeling
+- 演说 演說 [yan3 shuo1] speech/to deliver a speech
+- 独裁 獨裁 [du2 cai2] dictatorship
+- 空军 空軍 [kong1 jun1] air force
+- 罢工 罷工 [ba4 gong1] a strike/to go on strike
+- 自卫队 自衛隊 [zi4 wei4 dui4] self-defense force/the Japanese armed forces
+- 行政 [xing2 zheng4] administrative/executive (attributive)
+- 规则 規則 [gui1 ze2] rule/regulation/rules and regulations
+- 贪污 貪污 [tan1 wu1] to be corrupt/corruption/to embezzle
+- 军队 軍隊 [jun1 dui4] army/troops/CL:支\[zhi1\],個|个\[ge4\]
+- 选举 選舉 [xuan3 ju3] to elect/election/CL:次\[ci4\],個|个\[ge4\]
+- 开票 開票 [kai1 piao4] to open ballot boxes/to count votes/to make out a voucher or invoice etc/to write out a receipt
+- 陆军 陸軍 [lu4 jun1] army/ground forces
+- 革命 [ge2 ming4] revolution/revolutionary (politics)/CL:次\[ci4\]

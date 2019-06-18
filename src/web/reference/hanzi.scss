@@ -1,0 +1,32 @@
+#hanzi-ui {
+    .hanzi-display {
+        font-size: 200px;
+        font-family: HanaMin;
+        margin-top: 0.2em;
+        direction: rtl;
+        overflow-y: hidden;
+        border: none;
+        border-collapse: collapse;
+        width: 1em;
+    }
+    
+    .c-block {
+        > * {
+            font-family: HanaMin;
+            height: 1.2em;
+            width: 1.2em;
+            background: rgba(0, 0, 0, 0);
+            border: none;;
+            font-size: 30px;
+        }
+
+        > .hover {
+            position: absolute;
+            font-size: 60px !important;
+            -webkit-box-shadow: 0 0 30px 30px rgba(255, 255, 255, 0.5) inset;
+            -moz-box-shadow: 0 0 30px 30px rgba(255, 255, 255, 0.5) inset;
+            box-shadow: 0 0 30px 30px rgba(255, 255, 255, 0.5) inset;
+            z-index: 10;
+        }
+    }
+}

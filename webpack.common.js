@@ -1,4 +1,5 @@
 const path = require("path");
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
     web: {
@@ -6,8 +7,9 @@ module.exports = {
             index: "./src/web/index.ts"
         },
         output: {
-            path: path.resolve(__dirname, "dist"),
-            filename: "[name].min.js"
+            path: path.resolve(__dirname, "public/js"),
+            filename: "[name].min.js",
+            publicPath: "js/"
         },
         module: {
             rules: [{
@@ -27,6 +29,7 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [
+                    'vue-style-loader',
                     "style-loader",
                     "css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]"
                 ],
@@ -57,6 +60,10 @@ module.exports = {
                 },],
             },
             {
+                test: /\.vue$/,
+                loader: 'vue-loader'
+            },
+            {
                 test: require.resolve("jquery"),
                 use: [{
                     loader: "expose-loader",
@@ -72,11 +79,19 @@ module.exports = {
             extensions: [
                 ".tsx",
                 ".ts",
-                ".js"
+                ".js",
+                ".vue"
             ],
             alias: {
                 'vue$': 'vue/dist/vue.esm.js'
             }
-        }
+        },
+        node: {
+            fs: "empty"
+        },
+        plugins: [
+            // make sure to include the plugin!
+            new VueLoaderPlugin()
+        ]
     }
 };
