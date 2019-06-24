@@ -1,7 +1,7 @@
-import { Vue, Component, Watch } from "vue-property-decorator";
+import { Vue, Component } from "vue-property-decorator";
 import h from "hyperscript";
-import TreeviewItem from "../quiz/TreeviewItem";
 import { treeviewData } from "../shared";
+import TreeviewItem from "../components/TreeviewItem";
 
 @Component({
     components: {TreeviewItem},

@@ -1,10 +1,10 @@
 import { Vue, Component, Watch } from "vue-property-decorator";
 import h from "hyperscript";
-import TreeviewItem from "./TreeviewItem";
 import { slowClick, fetchJSON, quizDataToContent } from "../util";
 import swal from "sweetalert";
 import "./quiz.scss";
 import { treeviewData } from "../shared";
+import TreeviewItem from "../components/TreeviewItem";
 
 @Component({
     components: {TreeviewItem},
